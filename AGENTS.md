@@ -6,8 +6,8 @@ Panduan untuk agent/AI yang mengerjakan repo ini. Baca dulu: REQUIREMENTS.md, AR
 
 - Frontend: React 18 + Vite, **JavaScript murni (tanpa TypeScript)**, tanpa state/UI library.
 - PWA: `vite-plugin-pwa` (Workbox). IndexedDB via **Dexie** — skema terpusat di `src/db/db.js`, semua akses lewat modul `src/db/`.
-- Backend: Express + `better-sqlite3`, JWT (`jsonwebtoken`), `bcrypt`.
-- Node ≥ 20.
+- Backend: **Cloudflare Workers + Hono**, DB **D1** (SQLite, skema di `schema.sql`). Deploy: `npm run deploy`. Auth PBKDF2 (Web Crypto) + HMAC JWT — tanpa dependency native (bcrypt/express/better-sqlite3 dilarang di Workers).
+- Node ≥ 20 (untuk tooling), Node tidak menjalankan backend.
 
 ## Aturan kerja
 

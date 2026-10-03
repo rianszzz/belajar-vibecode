@@ -1,14 +1,3 @@
-import express from 'express'
-import Database from 'better-sqlite3'
-import { mkdirSync } from 'node:fs'
-
-const DB_FILE = new URL('./data.db', import.meta.url).pathname
-mkdirSync(new URL('./', import.meta.url).pathname, { recursive: true })
-const dbSqlite = new Database(DB_FILE)
-dbSqlite.pragma('journal_mode = WAL')
-dbSqlite.pragma('foreign_keys = ON')
-
-dbSqlite.exec(`
 CREATE TABLE IF NOT EXISTS users (
   username TEXT PRIMARY KEY,
   password_hash TEXT NOT NULL,
@@ -51,12 +40,3 @@ CREATE TABLE IF NOT EXISTS conflicts (
   resolved_by TEXT,
   at TEXT
 );
-`)
-
-const app = express()
-app.use(express.json())
-
-app.get('/api/health', (_req, res) => res.json({ ok: true }))
-
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => console.log(`Mini POS server :${PORT}`))

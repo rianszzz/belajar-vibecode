@@ -5,21 +5,20 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "server": "node server/index.js",
+    "server": "wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
     "test": "node --test"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
-    "better-sqlite3": "^11.3.0",
     "dexie": "^4.0.8",
-    "express": "^4.21.0",
-    "jsonwebtoken": "^9.0.2",
+    "hono": "^4.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
     "vite": "^5.4.8",
-    "vite-plugin-pwa": "^0.20.5"
+    "vite-plugin-pwa": "^0.20.5",
+    "wrangler": "^3.80.0"
   }
 }
