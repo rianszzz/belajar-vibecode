@@ -6,6 +6,7 @@ import { cartTotal, formatRp, changeDue } from '../lib/money.js'
 import { searchProducts, categories, checkout } from '../db/txns.js'
 import ReceiptModal from '../components/ReceiptModal.jsx'
 import SyncBadge from '../components/SyncBadge.jsx'
+import Scanner from '../components/Scanner.jsx'
 
 export default function POS() {
   const { user, logout } = useAuth()
@@ -18,6 +19,7 @@ export default function POS() {
   const [paid, setPaid] = useState('')
   const [receipt, setReceipt] = useState(null)
   const [error, setError] = useState('')
+  const [scanning, setScanning] = useState(false)
 
   const reload = () => {
     searchProducts(query, cat).then(setProducts)
@@ -58,7 +60,7 @@ export default function POS() {
   return (
     <main style={{ padding: 16 }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ fontSize: 18, margin: 0 }}>Mini POS</h1>
+        <h1 style={{ fontSize: 18, margin: 0 }}>Kasir</h1>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <SyncBadge />
           <span style={{ color: 'var(--muted)' }}>{user.username} ({user.role})</span>
@@ -76,6 +78,11 @@ export default function POS() {
             style={{ width: '100%', padding: 10 }}
             aria-label="Cari produk"
           />
+          <div style={{ display: 'flex', gap: 8, margin: '8px 0' }}>
+            <button onClick={() => setScanning(true)} style={{ padding: '8px 14px' }} aria-label="Pindai barcode kamera">
+              📷 Scan
+            </button>
+          </div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '8px 0' }}>
             <button onClick={() => setCat('')} style={{ padding: '6px 10px', background: !cat ? 'var(--primary)' : 'var(--surface)' }}>Semua</button>
             {cats.map((c) => (
@@ -137,6 +144,13 @@ export default function POS() {
       </div>
 
       {receipt && <ReceiptModal txn={receipt} onClose={() => setReceipt(null)} />}
+      {scanning && (
+        <Scanner
+          products={products}
+          onPick={(p) => { dispatch({ type: 'add', product: p }); setScanning(false) }}
+          onClose={() => setScanning(false)}
+        />
+      )}
     </main>
   )
 }

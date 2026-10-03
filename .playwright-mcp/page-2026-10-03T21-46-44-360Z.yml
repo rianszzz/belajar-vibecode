@@ -1,0 +1,23 @@
+- generic [ref=f3e2]:
+  - navigation [ref=f3e3]:
+    - button "Kasir" [ref=f3e4] [cursor=pointer]
+    - button "Konflik" [ref=f3e5] [cursor=pointer]
+    - button "Laporan" [active] [ref=f3e6] [cursor=pointer]
+  - main [ref=f3e120]:
+    - generic [ref=f3e121]:
+      - heading "Laporan Harian" [level=1] [ref=f3e122]
+      - generic [ref=f3e123]:
+        - 'button "Status sinkronisasi: Tersinkron. Klik untuk sinkron manual." [ref=f3e124] [cursor=pointer]': 🟢 Tersinkron
+        - generic [ref=f3e125]: kasir (admin)
+        - button "Keluar" [ref=f3e126] [cursor=pointer]
+    - generic [ref=f3e127]: Tanggal
+    - textbox "Tanggal" [ref=f3e128]: 2026-10-04
+    - generic [ref=f3e129]:
+      - generic [ref=f3e130]:
+        - generic [ref=f3e131]: Transaksi
+        - generic [ref=f3e132]: "0"
+      - generic [ref=f3e133]:
+        - generic [ref=f3e134]: Pendapatan
+        - generic [ref=f3e135]: Rp0
+    - heading "Item Terlaris" [level=2] [ref=f3e136]
+    - paragraph [ref=f3e137]: Tidak ada penjualan pada tanggal ini.

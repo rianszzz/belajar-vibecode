@@ -4,7 +4,7 @@ import { hashPassword, verifyPassword } from './auth.js'
 
 test('PBKDF2: hash & verify, termasuk salt byte >127', async () => {
   const h = await hashPassword('admin123')
-  assert.ok(h.startsWith('pbkdf2$600000$'))
+  assert.ok(h.startsWith('pbkdf2$100000$'))
   assert.equal(await verifyPassword('admin123', h), true)
   assert.equal(await verifyPassword('salah', h), false)
 

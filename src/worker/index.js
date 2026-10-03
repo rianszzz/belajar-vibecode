@@ -147,15 +147,17 @@ async function applyTxn(env, txn) {
       [
         // 1) cek duplikat
         env.DB.prepare('SELECT uuid FROM transactions WHERE uuid = ?').bind(uuid),
-        // 2) atomic guard stok per item: rowsaffected=0 berarti stok kurang
+        // 2) atomic guard stok per item: rowsaffected=0 berarti stok kurang.
+        // updated_at ikut dinaikkan agar perubahan stok terlihat oleh pull watermark.
         ...items.map((i) =>
           env.DB.prepare(
-            "UPDATE products SET stock = stock - ?, updated_at = updated_at WHERE uuid = ? AND stock >= ? AND active = 1"
-          ).bind(Math.round(Number(i.qty) || 0), String(i.uuid || ''), Math.round(Number(i.qty) || 0))
+            "UPDATE products SET stock = stock - ?, updated_at = ? WHERE uuid = ? AND stock >= ? AND active = 1"
+          ).bind(Math.round(Number(i.qty) || 0), new Date().toISOString(), String(i.uuid || ''), Math.round(Number(i.qty) || 0))
         ),
       ],
       'write'
     ).then(async (res) => {
+      console.log('applyTxn batch meta:', res.map((r) => r.meta))
       const dup = res[0].results?.length > 0
       if (dup) return { uuid, status: 'duplicate' }
 

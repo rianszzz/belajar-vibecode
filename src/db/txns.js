@@ -1,4 +1,4 @@
-import { db, meta } from './db.js'
+import { db, meta, ensureDeviceId } from './db.js'
 
 export async function saveProducts(products) {
   await db.products.bulkPut(products)
@@ -30,7 +30,7 @@ export async function categories() {
 // Alur panas: transaksi + receipt + outbox + stok + seq — satu transaksi Dexie.
 // Gagal di tengah = rollback semua (tidak ada transaksi "setengah jadi").
 export async function checkout({ items, subtotal, discount, total, paid }) {
-  const deviceId = await meta.get('device_id')
+  const deviceId = await ensureDeviceId()
   const uuid = crypto.randomUUID()
   const now = new Date().toISOString()
 
