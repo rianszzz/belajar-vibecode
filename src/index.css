@@ -1,0 +1,29 @@
+:root {
+  --bg: #f5f5f4;
+  --surface: #ffffff;
+  --border: #e7e5e4;
+  --text: #1c1917;
+  --muted: #78716c;
+  --primary: #0f766e;
+  --primary-ink: #ffffff;
+  --danger: #b91c1c;
+  --warning: #b45309;
+  --ok: #15803d;
+  --radius: 8px;
+  --font: system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 var(--font);
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+a { color: var(--primary); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
