@@ -1,21 +1,29 @@
-import React, { useEffect, useState } from 'react'
-import { db, ensureDeviceId, meta } from './db/db.js'
+import React from 'react'
+import { AuthProvider } from './state/auth-context.jsx'
+import { CartProvider } from './state/cart-context.jsx'
+import { SyncProvider } from './state/sync-context.jsx'
+import { startAutoSync } from './sync/sync.js'
+import Login from './pages/Login.jsx'
+import POS from './pages/POS.jsx'
+
+startAutoSync()
 
 export default function App() {
-  const [status, setStatus] = useState('memuat…')
-
-  useEffect(() => {
-    ensureDeviceId()
-      .then((id) => meta.set('app_ready_at', new Date().toISOString()))
-      .then(() => db.open())
-      .then(() => setStatus(`OK — device siap, store: ${db.tables.map((t) => t.name).join(', ')}`))
-      .catch((e) => setStatus('Gagal buka DB: ' + e.message))
-  }, [])
-
   return (
-    <main style={{ padding: 24 }}>
-      <h1 style={{ fontSize: 24, margin: 0 }}>Mini POS</h1>
-      <p>{status}</p>
-    </main>
+    <AuthProvider>
+      <SyncProvider>
+        <CartProvider>
+          <AppInner />
+        </CartProvider>
+      </SyncProvider>
+    </AuthProvider>
   )
+}
+
+function AppInner() {
+  const { user, loading } = useAuth()
+
+  if (loading) return <main style={{ padding: 24 }}>Memuat…</main>
+  if (!user) return <Login />
+  return <POS />
 }

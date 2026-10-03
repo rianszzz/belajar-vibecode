@@ -14,8 +14,11 @@ export default defineConfig({
         description: 'Kasir & stok toko kecil, offline-first',
         theme_color: '#0f766e',
         background_color: '#f5f5f4',
-      // ponytail: ikon PWA ditambahkan di T5 (W5 butuh 192/512 valid)
         display: 'standalone',
+        icons: [
+          { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'pwa-512.png', sizes: '512x512', type: 'image/png' },
+        ],
       },
       workbox: {
         // API sync tidak pernah di-cache; katalog GET via network-first di bawah

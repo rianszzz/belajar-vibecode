@@ -24,6 +24,11 @@ button, input, select { font: inherit; }
 button { cursor: pointer; }
 a { color: var(--primary); }
 
+@media print {
+  body * { display: none !important; }
+  .receipt, .receipt * { display: block !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
