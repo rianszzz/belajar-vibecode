@@ -1,0 +1,23 @@
+[      78ms] [ERROR] ReferenceError: useAuth is not defined
+    at Bv (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:44:6072)
+    at Os (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:38:17064)
+    at Wp (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:44039)
+    at $p (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:39773)
+    at Ym (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:39701)
+    at Cu (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:39554)
+    at Va (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:35916)
+    at Kp (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:34867)
+    at X (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:25:1627)
+    at MessagePort.Rt (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:25:2010) @ https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:39
+[     116ms] ReferenceError: useAuth is not defined
+    at Bv (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:44:6072)
+    at Os (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:38:17064)
+    at Wp (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:44039)
+    at $p (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:39773)
+    at Ym (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:39701)
+    at Cu (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:39554)
+    at Va (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:35916)
+    at Kp (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:40:34867)
+    at X (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:25:1627)
+    at MessagePort.Rt (https://belajar-vibecode.ryandraa27.workers.dev/assets/index-C1Meq5lY.js:25:2010)
+[     289ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://belajar-vibecode.ryandraa27.workers.dev/api/products/changes?since=1970-01-01T00%3A00%3A00.000Z:0

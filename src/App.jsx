@@ -1,5 +1,5 @@
 import React from 'react'
-import { AuthProvider } from './state/auth-context.jsx'
+import { AuthProvider, useAuth } from './state/auth-context.jsx'
 import { CartProvider } from './state/cart-context.jsx'
 import { SyncProvider } from './state/sync-context.jsx'
 import { startAutoSync } from './sync/sync.js'

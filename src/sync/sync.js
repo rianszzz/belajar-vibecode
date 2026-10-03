@@ -1,6 +1,7 @@
 import { api } from './api.js'
 import { db, meta } from '../db/db.js'
 import { dueBatch, markSuccess, markConflict, markRetry } from '../db/outbox.js'
+import { getSession, isTokenExpired } from '../db/users.js'
 
 let syncing = false
 
@@ -8,6 +9,9 @@ let syncing = false
 export async function syncNow() {
   if (syncing) return { skipped: true }
   if (!navigator.onLine) return { offline: true }
+  // tanpa sesi valid, pull pasti 401 — skip senyap (bukan error)
+  const session = await getSession()
+  if (!session || isTokenExpired(session.token)) return { noSession: true }
   syncing = true
   try {
     const pushRes = await pushPending()

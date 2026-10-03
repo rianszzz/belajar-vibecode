@@ -1,0 +1,24 @@
+- main [ref=f2e11]:
+  - generic [ref=f2e12]:
+    - heading "Mini POS" [level=1] [ref=f2e13]
+    - generic [ref=f2e14]:
+      - 'button "Status sinkronisasi: Tersinkron. Klik untuk sinkron manual." [ref=f2e15] [cursor=pointer]': 🟢 Tersinkron
+      - generic [ref=f2e16]: kasir (kasir)
+      - button "Keluar" [ref=f2e17] [cursor=pointer]
+  - generic [ref=f2e18]:
+    - generic [ref=f2e19]:
+      - textbox "Cari produk" [ref=f2e20]:
+        - /placeholder: Cari nama / barcode…
+      - button "Semua" [ref=f2e22] [cursor=pointer]
+    - generic [ref=f2e23]:
+      - heading "Keranjang" [level=2] [ref=f2e24]
+      - paragraph [ref=f2e25]: Belum ada item.
+      - generic [ref=f2e26]: Diskon (Rp)
+      - spinbutton "Diskon (Rp)" [ref=f2e27]
+      - separator [ref=f2e28]
+      - generic [ref=f2e29]: "Subtotal: Rp0"
+      - generic [ref=f2e30]: "Total: Rp0"
+      - generic [ref=f2e31]: Bayar (Rp)
+      - spinbutton "Bayar (Rp)" [ref=f2e32]
+      - generic [ref=f2e33]: "Kembali: Rp0"
+      - button "BAYAR" [disabled] [ref=f2e34] [cursor=pointer]
