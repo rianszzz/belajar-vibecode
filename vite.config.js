@@ -33,4 +33,6 @@ export default defineConfig({
       },
     }),
   ],
+  // dev only: API di wrangler dev :8787 — produksi satu origin via ASSETS (tanpa proxy)
+  server: { proxy: { '/api': 'http://localhost:8787' } },
 })

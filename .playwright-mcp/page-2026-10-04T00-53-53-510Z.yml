@@ -1,0 +1,8 @@
+- main [ref=f7e3]:
+  - heading "Mini POS" [level=1] [ref=f7e4]
+  - generic [ref=f7e5]:
+    - generic [ref=f7e6]: Username
+    - textbox "Username" [ref=f7e7]: kasir
+    - generic [ref=f7e8]: Password
+    - textbox "Password" [active] [ref=f7e9]: kasir123
+    - button "Masuk" [ref=f7e10] [cursor=pointer]

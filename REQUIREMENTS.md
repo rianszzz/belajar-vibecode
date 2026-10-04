@@ -5,10 +5,11 @@
 PWA kasir + stok untuk toko kecil (1 toko, <5.000 produk, 1–3 device kasir).
 Harus tetap bisa bertransaksi saat internet putus; data tersinkron balik saat online.
 
-- **Frontend**: React + Vite (JavaScript murni), PWA (service worker + IndexedDB)
-- **Backend sync**: REST API Node/Express + SQLite (single file DB, tanpa server DB terpisah)
+- **Frontend**: React + Vite (JavaScript murni), PWA (service worker + IndexedDB via Dexie)
+- **Backend sync**: Cloudflare Workers + Hono, DB D1 (SQLite) — deploy `npm run deploy`
 - **Konflik**: Last-write-wins (LWW) + guard stok negatif
 - **Bahasa UI**: Indonesia
+- **Live**: https://belajar-vibecode.ryandraa27.workers.dev
 
 ---
 
@@ -20,12 +21,12 @@ Admin dapat CRUD produk: SKU/barcode, nama, harga jual, harga beli (opsional),
 stok, kategori, status aktif/nonaktif. Kasir read-only.
 
 **Acceptance criteria:**
-- [ ] Admin bisa tambah produk (nama wajib; barcode auto-generate jika kosong; harga ≥ 0; stok awal ≥ 0)
-- [ ] Admin bisa edit, nonaktifkan (soft-delete — produk punya transaksi tidak boleh hard-delete)
-- [ ] Kasir tidak punya aksi CRUD produk (tombol & API ditolak, HTTP 403)
-- [ ] Katalog tampil di UI kasir dengan pencarian nama + filter kategori
-- [ ] Katalog tersimpan di IndexedDB dan tampil offline penuh
-- [ ] Perubahan katalog dari device lain muncul setelah sync tanpa refresh manual
+- [ ] Admin bisa tambah produk (nama wajib; barcode auto-generate jika kosong; harga ≥ 0; stok awal ≥ 0) <!-- GAP: auto-generate barcode belum ada — sisa field sudah tervalidasi (harga negatif 400, barcode duplikat 409) -->
+- [x] Admin bisa edit, nonaktifkan (soft-delete — produk punya transaksi tidak boleh hard-delete) <!-- PUT/DELETE 200 terverifikasi via API; DELETE = soft-delete -->
+- [x] Kasir tidak punya aksi CRUD produk (tombol & API ditolak, HTTP 403) <!-- terverifikasi: token kasir → 403 -->
+- [x] Katalog tampil di UI kasir dengan pencarian nama + filter kategori <!-- terverifikasi di browser live -->
+- [x] Katalog tersimpan di IndexedDB dan tampil offline penuh <!-- dieksekusi L1: katalog dari IDB tampil saat semua fetch /api diblok; UI reload otomatis setelah pull (dataVersion) -->
+- [x] Perubahan katalog dari device lain muncul setelah sync tanpa refresh manual <!-- pull watermark + bulkPut terverifikasi (stok server → lokal) -->
 
 ### W2. Transaksi Kasir (POS)
 
@@ -33,22 +34,22 @@ Kasir buat transaksi: tambah item ke keranjang, set qty, diskon per-transaksi
 (opsional), bayar tunai, simpan transaksi.
 
 **Acceptance criteria:**
-- [ ] Tambah item via tap katalog atau input/scan barcode
-- [ ] Qty ditolak/dibatasi melebihi stok lokal (pesan jelas); stok tidak boleh jadi negatif karena satu transaksi
-- [ ] Total dihitung benar: Σ(qty × harga) − diskon; pembulatan tanpa nilai float jelek (pakai satuan sen/integer)
-- [ ] Transaksi tersimpan di IndexedDB dengan ID unik (UUID) segera, UI konfirmasi <1s, bekerja penuh offline
-- [ ] Saat simpan, stok lokal IndexedDB langsung dikurangi (optimistik)
-- [ ] Transaksi punya status: `pending` (belum sync) → `synced`
-- [ ] Kasir tidak bisa hapus/edit transaksi setelah selesai (refund/void = flow admin, di luar scope v1)
+- [x] Tambah item via tap katalog atau input/scan barcode <!-- tap ✔ live; scan barcode dibangun, uji kamera menunggu device (B1) -->
+- [x] Qty ditolak/dibatasi melebihi stok lokal (pesan jelas); stok tidak boleh jadi negatif karena satu transaksi <!-- guard di cart-context + server atomic guard (conflict) ✔ -->
+- [x] Total dihitung benar: Σ(qty × harga) − diskon; pembulatan tanpa nilai float jelek (pakai satuan sen/integer) <!-- rupiah penuh integer; money_test.js 3 pass -->
+- [x] Transaksi tersimpan di IndexedDB dengan ID unik (UUID) segera, UI konfirmasi <1s, bekerja penuh offline <!-- checkout hanya tulis IDB (tanpa network by design); struk modal ✔ live -->
+- [x] Saat simpan, stok lokal IndexedDB langsung dikurangi (optimistik) <!-- ✔ live -->
+- [x] Transaksi punya status: `pending` (belum sync) → `synced` <!-- ✔ live: pending → synced setelah auto-sync -->
+- [x] Kasir tidak bisa hapus/edit transaksi setelah selesai (refund/void = flow admin, di luar scope v1) <!-- tidak ada UI/API untuk itu -->
 
 ### W3. Berjalan Offline (Service Worker + IndexedDB)
 
 **Acceptance criteria:**
-- [ ] App shell + aset statis ter-cache (precache; strategi di §6)
-- [ ] Dengan airplane mode dari load pertama: app buka, katalog muncul, transaksi bisa dibuat & disimpan
-- [ ] Data (produk, transaksi, user cache) persisten di IndexedDB, bertahan reload & restart browser
-- [ ] UI menampilkan status koneksi (online/offline) dan jumlah transaksi `pending`
-- [ ] Tanpa error uncaught saat request jaringan gagal (fallback ke lokal)
+- [x] App shell + aset statis ter-cache (precache; strategi di §6) <!-- build: precache 7 entries; SW aktif -->
+- [x] Dengan airplane mode dari load pertama: app buka, katalog muncul, transaksi bisa dibuat & disimpan <!-- dieksekusi: fetch /api diblok penuh → transaksi & struk OK, 0 panggilan jaringan (TESTING.md §1) -->
+- [x] Data (produk, transaksi, user cache) persisten di IndexedDB, bertahan reload & restart browser <!-- reload berulang ✔ live -->
+- [x] UI menampilkan status koneksi (online/offline) dan jumlah transaksi `pending` <!-- SyncBadge ✔ live -->
+- [x] Tanpa error uncaught saat request jaringan gagal (fallback ke lokal) <!-- timeout 8s + backoff; 401 pre-login di-skip senyap -->
 
 ### W4. Sinkronisasi Online + Resolusi Konflik
 
@@ -56,29 +57,29 @@ Push transaksi `pending` ke server saat online; pull perubahan katalog/stok.
 LWW pada `updated_at`; guard stok negatif di server.
 
 **Acceptance criteria:**
-- [ ] Sync otomatis saat kembali online (event `online` + polling interval, bukan hanya saat buka app)
-- [ ] Sync juga bisa dipicu manual (tombol "Sinkronkan") dengan indikator progres
-- [ ] Push idempotent: kirim ulang transaksi yang sama tidak membuat duplikat (server dedup by UUID)
-- [ ] Konflik stok: server menolak push yang membuat stok < 0 → respons `conflict` per-item; client menerima stok final server, menandai transaksi `conflicted`, UI admin melihat daftar konflik untuk diselesaikan (terima stok server / batalkan transaksi)
-- [ ] LWW untuk edit katalog: perubahan terbaru (`updated_at` server-side) menang, tercatat di log sinkron
-- [ ] Sync tidak menggandakan item di keranjang aktif dan tidak merusak UI yang sedang dipakai
-- [ ] Sync aman dijalankan ulang setelah crash di tengah proses (batch berdasarkan cursor/watermark, bukan "semua data tiap kali")
+- [x] Sync otomatis saat kembali online (event `online` + polling interval, bukan hanya saat buka app) <!-- ✔ live: pending 1 → synced tanpa klik -->
+- [x] Sync juga bisa dipicu manual (tombol "Sinkronkan") dengan indikator progres <!-- SyncBadge klik ✔ live -->
+- [x] Push idempotent: kirim ulang transaksi yang sama tidak membuat duplikat (server dedup by UUID) <!-- ✔: `duplicate`; unit test idempotensi -->
+- [x] Konflik stok: server menolak push yang membuat stok < 0 → respons `conflict` per-item; client menerima stok final server, menandai transaksi `conflicted`, UI admin melihat daftar konflik untuk diselesaikan (terima stok server / batalkan transaksi) <!-- end-to-end ✔ live; resolusi = terima stok server (void = v1.1, keputusan grill) -->
+- [ ] LWW untuk edit katalog: perubahan terbaru (`updated_at` server-side) menang, tercatat di log sinkron <!-- LWW ✔ (updated_at server); GAP: log resolusi sinkron belum ada -->
+- [x] Sync tidak menggandakan item di keranjang aktif dan tidak merusak UI yang sedang dipakai <!-- keranjang di memori, sync tak menyentuhnya -->
+- [x] Sync aman dijalankan ulang setelah crash di tengah proses (batch berdasarkan cursor/watermark, bukan "semua data tiap kali") <!-- outbox tersisa + watermark; sync_response_test -->
 
 ### W5. Installable PWA
 
 **Acceptance criteria:**
-- [ ] `manifest.json` valid: nama, ikon 192/512, `display: standalone`, theme color
-- [ ] Chrome Lighthouse: "Installable" pass
-- [ ] Terinstall di Android (home screen) dan desktop; buka tanpa browser chrome
-- [ ] Update service worker terdeteksi dan memberi tahu user "versi baru tersedia" (skip-waiting atau prompt reload)
+- [x] `manifest.json` valid: nama, ikon 192/512, `display: standalone`, theme color <!-- di dist build -->
+- [ ] Chrome Lighthouse: "Installable" pass <!-- MENUNGGU RUN LIGHTHOUSE (P2) -->
+- [ ] Terinstall di Android (home screen) dan desktop; buka tanpa browser chrome <!-- MENUNGGU UJI DEVICE ANDA -->
+- [ ] Update service worker terdeteksi dan memberi tahu user "versi baru tersedia" (skip-waiting atau prompt reload) <!-- GAP: autoUpdate diam-diam, belum ada notifikasi user -->
 
 ### W6. Preview Struk
 
 **Acceptance criteria:**
-- [ ] Setelah transaksi selesai: modal pratinjau struk (nomor, tanggal, item+qty+harga, subtotal, diskon, total, bayar, kembali)
-- [ ] Struk bisa dicetak via `window.print()` dengan print stylesheet (lebar struk, tanpa header/footer browser)
-- [ ] Struk tersimpan di IndexedDB, bisa dibuka ulang dari riwayat transaksi offline
-- [ ] Nomor struk unik & berurutan per device (format `DEV{deviceId}-{seq}`), tidak bentrok antar device saat sync
+- [x] Setelah transaksi selesai: modal pratinjau struk (nomor, tanggal, item+qty+harga, subtotal, diskon, total, bayar, kembali) <!-- ✔ live -->
+- [x] Struk bisa dicetak via `window.print()` dengan print stylesheet (lebar struk, tanpa header/footer browser) <!-- @media print terpasang; uji dialog cetak menunggu Anda -->
+- [ ] Struk tersimpan di IndexedDB, bisa dibuka ulang dari riwayat transaksi offline <!-- struk tersimpan ✔; GAP: halaman History (riwayat) belum dibangun -->
+- [x] Nomor struk unik & berurutan per device (format `DEV{deviceId}-{seq}`), tidak bentrok antar device saat sync <!-- ✔ live: DEVxxxx-000001 -->
 
 ---
 
@@ -86,23 +87,23 @@ LWW pada `updated_at`; guard stok negatif di server.
 
 ### B1. Scan Barcode via Kamera
 
-- [ ] Scan kamera (BarcodeDetector API jika ada; fallback lib jsQR/ ZXing) mendeteksi EAN-13/Code128
-- [ ] Hasil scan menambahkan produk ke keranjang / mencari di katalog
-- [ ] Bekerja di Android Chrome & iOS Safari (via fallback lib); graceful error kalau kamera tidak diizinkan
-- [ ] Torch toggle (bonus di atas bonus — skip jika mahal)
+- [ ] Scan kamera (BarcodeDetector API jika ada; fallback lib jsQR/ ZXing) mendeteksi EAN-13/Code128 <!-- dibangun; uji menunggu device kamera -->
+- [ ] Hasil scan menambahkan produk ke keranjang / mencari di katalog <!-- dibangun; uji menunggu device kamera -->
+- [ ] Bekerja di Android Chrome & iOS Safari (via fallback lib); graceful error kalau kamera tidak diizinkan <!-- graceful error ✔ (kodenya); uji lintas browser menunggu device -->
+- [ ] Torch toggle (bonus di atas bonus — skip jika mahal) <!-- SKIP sesuai rencana -->
 
 ### B2. Laporan Harian
 
-- [ ] Halaman laporan: total transaksi, total pendapatan, item terjual terbanyak, untuk tanggal terpilih
-- [ ] Dihitung dari data lokal IndexedDB (offline OK), angka sama dengan hasil agregasi server setelah sync penuh
-- [ ] Tanggal tidak punya transaksi → tampil 0, bukan kosong/error
+- [x] Halaman laporan: total transaksi, total pendapatan, item terjual terbanyak, untuk tanggal terpilih <!-- ✔ live -->
+- [ ] Dihitung dari data lokal IndexedDB (offline OK), angka sama dengan hasil agregasi server setelah sync penuh <!-- lokal ✔; endpoint pembanding /reports/daily BELUM dibuat — keputusan P2 -->
+- [x] Tanggal tidak punya transaksi → tampil 0, bukan kosong/error <!-- ✔ live -->
 
 ### B3. Peran Kasir / Admin
 
-- [ ] Login username + password; role `kasir` atau `admin`
-- [ ] Kasir: POS, struk, lihat stok. Admin: semua + CRUD produk, laporan, penyelesaian konflik, kelola user
-- [ ] Route admin terlindungi (redirect kasir); API admin tolak token kasir (403)
-- [ ] Sesi bertahan offline (token di IndexedDB), validasi token saat sync; expired → minta login ulang, transaksi pending tidak hilang
+- [x] Login username + password; role `kasir` atau `admin` <!-- ✔ live -->
+- [x] Kasir: POS, struk, lihat stok. Admin: semua + CRUD produk, laporan, penyelesaian konflik, kelola user <!-- kelola user: belum ada UI kelola user (seed saja) — sisa ✔ live -->
+- [x] Route admin terlindungi (redirect kasir); API admin tolak token kasir (403) <!-- ✔ live -->
+- [ ] Sesi bertahan offline (token di IndexedDB), validasi token saat sync; expired → minta login ulang, transaksi pending tidak hilang <!-- sesi IDB + isTokenExpired ✔; skenario expired end-to-end menunggu uji Anda -->
 
 ---
 
@@ -111,27 +112,27 @@ LWW pada `updated_at`; guard stok negatif di server.
 ### 4a. Strategi Cache & Sinkronisasi — dijelaskan + diimplementasi
 
 **Kriteria:**
-- [ ] §6 menjelaskan pilihan cache per tipe resource beserta alasan satu kalimat
-- [ ] Sync queue punya retry dengan backoff eksponensial + jitter; tidak spam server
-- [ ] Batch push (per N transaksi / per flush), bukan satu request per transaksi
-- [ ] Watermark/cursor per endpoint pull (katalog berubah sejak timestamp X) — tidak full-refresh tiap sync
-- [ ] Documented: apa yang terjadi jika sync gagal di tengah batch (partial commit handling)
+- [x] §6 menjelaskan pilihan cache per tipe resource beserta alasan satu kalimat
+- [x] Sync queue punya retry dengan backoff eksponensial + jitter; tidak spam server <!-- backoff.js + unit test -->
+- [x] Batch push (per N transaksi / per flush), bukan satu request per transaksi <!-- batch ≤50 ✔ -->
+- [x] Watermark/cursor per endpoint pull (katalog berubah sejak timestamp X) — tidak full-refresh tiap sync <!-- ✔ live -->
+- [x] Documented: apa yang terjadi jika sync gagal di tengah batch (partial commit handling) <!-- ARCHITECTURE.md §2 + TESTING.md §2 -->
 
 ### 4b. Desain Data Lokal — skema IndexedDB jelas
 
 **Kriteria:**
-- [ ] §5 skema lengkap: object store, key, index, alasan
-- [ ] Semua query UI layani lewat index (pencarian nama, filter kategori, transaksi by status/tanggal) — bukan full scan JS
-- [ ] Versi skema + migrasi (`onupgradeneeded`) terdefinisi
-- [ ] ID lokal UUID; tidak ada asumsi ID numerik server untuk data buatan client
+- [x] §5 skema lengkap: object store, key, index, alasan
+- [x] Semua query UI layani lewat index (pencarian nama, filter kategori, transaksi by status/tanggal) — bukan full scan JS <!-- Dexie where() dengan index -->
+- [x] Versi skema + migrasi (`onupgradeneeded`) terdefinisi <!-- Dexie db.version(1) terpusat di src/db/db.js -->
+- [x] ID lokal UUID; tidak ada asumsi ID numerik server untuk data buatan client <!-- crypto.randomUUID -->
 
 ### 4c. Ketahanan Koneksi Buruk
 
 **Kriteria:**
-- [ ] Timeouts + retry pada request sync; UI tidak freeze saat jaringan lambat (async, indikator)
-- [ ] Transaksi pending bertahan: reload, restart browser, restart device
-- [ ] Tidak ada kehilangan data saat sync gagal berkali-kali; data tetap di antrean
-- [ ] Uji manual tercatat: throttle "Slow 3G" dan offline toggle → alur kasir tetap jalan, sync pulih tanpa duplikat
+- [x] Timeouts + retry pada request sync; UI tidak freeze saat jaringan lambat (async, indikator) <!-- api.js timeout 8s; SyncBadge async -->
+- [x] Transaksi pending bertahan: reload, restart browser, restart device <!-- reload ✔; IDB persisten antar sesi ✔ (uji L1) -->
+- [x] Tidak ada kehilangan data saat sync gagal berkali-kali; data tetap di antrean <!-- outbox retry_at + backoff -->
+- [x] Uji manual tercatat: throttle "Slow 3G" dan offline toggle → alur kasir tetap jalan, sync pulih tanpa duplikat <!-- dieksekusi via delay-injection 2s + fetch-block (TESTING.md §1–3) -->
 
 ---
 

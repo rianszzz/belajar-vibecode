@@ -64,7 +64,12 @@ export async function checkout({ items, subtotal, discount, total, paid }) {
     await db.outbox.add({ txn_uuid: uuid, payload: txn, attempts: 0, retry_at: 0 })
 
     for (const it of items) {
-      await db.products.update(it.uuid, (p) => ({ ...p, stock: p.stock - it.qty }))
+      // Dexie 4: callback update harus MUTASI objek yang diterima, bukan return spread baru
+      // (return {...p} tidak diterapkan — bug ditemukan saat uji offline lokal)
+      await db.products.update(it.uuid, (p) => {
+        p.stock = p.stock - it.qty
+        return p
+      })
     }
 
     return txn

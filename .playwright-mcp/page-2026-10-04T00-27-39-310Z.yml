@@ -1,0 +1,28 @@
+- generic [ref=e2]:
+  - navigation [ref=e12]:
+    - button "Kasir" [ref=e13] [cursor=pointer]
+  - main [ref=e14]:
+    - generic [ref=e15]:
+      - heading "Kasir" [level=1] [ref=e16]
+      - generic [ref=e17]:
+        - 'button "Status sinkronisasi: Tersinkron. Klik untuk sinkron manual." [ref=e18] [cursor=pointer]': 🟢 Tersinkron
+        - generic [ref=e19]: kasir (kasir)
+        - button "Keluar" [ref=e20] [cursor=pointer]
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - textbox "Cari produk" [ref=e23]:
+          - /placeholder: Cari nama / barcode…
+        - button "Pindai barcode kamera" [ref=e25] [cursor=pointer]: 📷 Scan
+        - button "Semua" [ref=e27] [cursor=pointer]
+      - generic [ref=e28]:
+        - heading "Keranjang" [level=2] [ref=e29]
+        - paragraph [ref=e30]: Belum ada item.
+        - generic [ref=e31]: Diskon (Rp)
+        - spinbutton "Diskon (Rp)" [ref=e32]
+        - separator [ref=e33]
+        - generic [ref=e34]: "Subtotal: Rp0"
+        - generic [ref=e35]: "Total: Rp0"
+        - generic [ref=e36]: Bayar (Rp)
+        - spinbutton "Bayar (Rp)" [ref=e37]
+        - generic [ref=e38]: "Kembali: Rp0"
+        - button "BAYAR" [disabled] [ref=e39] [cursor=pointer]

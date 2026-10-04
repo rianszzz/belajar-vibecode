@@ -62,7 +62,27 @@ async function pullProducts() {
 
   const { products, next_since } = res.data
   if (products?.length) {
-    await db.products.bulkPut(products)
+    // Jangan timpa stok produk yang masih punya transaksi pending di outbox:
+    // stok lokal = optimistik setelah penjualan offline; server akan menyelaraskan
+    // lewat push (synced → stok server final) atau konflik.
+    const pendingUuids = new Set(
+      (await db.outbox.toArray()).flatMap((e) => e.payload.items.map((i) => i.uuid))
+    )
+    const pending = []
+    const put = []
+    for (const p of products) {
+      ;(pendingUuids.has(p.uuid) ? pending : put).push(p)
+    }
+    if (put.length) await db.products.bulkPut(put)
+    // produk pending: ambil semua field server KECUALI stock
+    if (pending.length) {
+      const fresh = await db.products.bulkGet(pending.map((p) => p.uuid))
+      const merged = pending.map((p) => {
+        const local = fresh.find((f) => f?.uuid === p.uuid)
+        return local ? { ...p, stock: local.stock } : p
+      })
+      await db.products.bulkPut(merged)
+    }
   }
   if (next_since) await meta.set('watermark', next_since)
   return { pulled: products?.length || 0 }

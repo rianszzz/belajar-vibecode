@@ -1,0 +1,116 @@
+- generic [ref=f3e2]:
+  - navigation [ref=f3e126]:
+    - button "Kasir" [ref=f3e127] [cursor=pointer]
+  - main [ref=f3e128]:
+    - generic [ref=f3e129]:
+      - heading "Kasir" [level=1] [ref=f3e130]
+      - generic [ref=f3e131]:
+        - 'button "Status sinkronisasi: Sinkronkan (3). Klik untuk sinkron manual." [ref=f3e132] [cursor=pointer]': 🟢 Sinkronkan (3)
+        - generic [ref=f3e133]: kasir (kasir)
+        - button "Keluar" [ref=f3e134] [cursor=pointer]
+    - generic [ref=f3e135]:
+      - generic [ref=f3e136]:
+        - textbox "Cari produk" [ref=f3e137]:
+          - /placeholder: Cari nama / barcode…
+        - button "Pindai barcode kamera" [ref=f3e139] [cursor=pointer]: 📷 Scan
+        - generic [ref=f3e140]:
+          - button "Semua" [ref=f3e141] [cursor=pointer]
+          - button "Sembako" [ref=f3e142] [cursor=pointer]
+          - button "Makanan" [ref=f3e143] [cursor=pointer]
+          - button "Minuman" [ref=f3e144] [cursor=pointer]
+          - button "Kebutuhan Rumah" [ref=f3e145] [cursor=pointer]
+          - button "Rokok" [ref=f3e146] [cursor=pointer]
+          - button "Lainnya" [ref=f3e147] [cursor=pointer]
+        - generic [ref=f3e148]:
+          - button "Air Mineral 600ml Rp4.000 stok 150" [ref=f3e149] [cursor=pointer]:
+            - generic [ref=f3e150]: Air Mineral 600ml
+            - generic [ref=f3e151]: Rp4.000
+            - generic [ref=f3e152]: stok 150
+          - button "Beras Premium 5kg Rp72.000 stok 40" [ref=f3e153] [cursor=pointer]:
+            - generic [ref=f3e154]: Beras Premium 5kg
+            - generic [ref=f3e155]: Rp72.000
+            - generic [ref=f3e156]: stok 40
+          - button "Biskuit Cokelat Rp8.500 stok 40" [ref=f3e157] [cursor=pointer]:
+            - generic [ref=f3e158]: Biskuit Cokelat
+            - generic [ref=f3e159]: Rp8.500
+            - generic [ref=f3e160]: stok 40
+          - button "Deterjen Bubuk 800g Rp18.000 stok 28" [ref=f3e161] [cursor=pointer]:
+            - generic [ref=f3e162]: Deterjen Bubuk 800g
+            - generic [ref=f3e163]: Rp18.000
+            - generic [ref=f3e164]: stok 28
+          - button "Gula Pasir 1kg Rp15.000 stok 60" [ref=f3e165] [cursor=pointer]:
+            - generic [ref=f3e166]: Gula Pasir 1kg
+            - generic [ref=f3e167]: Rp15.000
+            - generic [ref=f3e168]: stok 60
+          - button "Kecap Manis 520ml Rp14.000 stok 30" [ref=f3e169] [cursor=pointer]:
+            - generic [ref=f3e170]: Kecap Manis 520ml
+            - generic [ref=f3e171]: Rp14.000
+            - generic [ref=f3e172]: stok 30
+          - button "Kopi Sachet Rp2.000 stok 200" [ref=f3e173] [cursor=pointer]:
+            - generic [ref=f3e174]: Kopi Sachet
+            - generic [ref=f3e175]: Rp2.000
+            - generic [ref=f3e176]: stok 200
+          - button "Korek Api Rp1.000 stok 100" [ref=f3e177] [cursor=pointer]:
+            - generic [ref=f3e178]: Korek Api
+            - generic [ref=f3e179]: Rp1.000
+            - generic [ref=f3e180]: stok 100
+          - button "Mie Instan Goreng Rp3.500 stok 120" [ref=f3e181] [cursor=pointer]:
+            - generic [ref=f3e182]: Mie Instan Goreng
+            - generic [ref=f3e183]: Rp3.500
+            - generic [ref=f3e184]: stok 120
+          - button "Minyak Goreng 2L Rp36.000 stok 49" [ref=f3e185] [cursor=pointer]:
+            - generic [ref=f3e186]: Minyak Goreng 2L
+            - generic [ref=f3e187]: Rp36.000
+            - generic [ref=f3e188]: stok 49
+          - button "Pasta Gigi Rp12.000 stok 35" [ref=f3e189] [cursor=pointer]:
+            - generic [ref=f3e190]: Pasta Gigi
+            - generic [ref=f3e191]: Rp12.000
+            - generic [ref=f3e192]: stok 35
+          - button "Rokok Filter 12 Rp26.000 stok 50" [ref=f3e193] [cursor=pointer]:
+            - generic [ref=f3e194]: Rokok Filter 12
+            - generic [ref=f3e195]: Rp26.000
+            - generic [ref=f3e196]: stok 50
+          - button "Roti Tawar Rp17.000 stok 20" [ref=f3e197] [cursor=pointer]:
+            - generic [ref=f3e198]: Roti Tawar
+            - generic [ref=f3e199]: Rp17.000
+            - generic [ref=f3e200]: stok 20
+          - button "Sabun Mandi Batang Rp4.500 stok 80" [ref=f3e201] [cursor=pointer]:
+            - generic [ref=f3e202]: Sabun Mandi Batang
+            - generic [ref=f3e203]: Rp4.500
+            - generic [ref=f3e204]: stok 80
+          - button "Saus Sambal 340ml Rp11.000 stok 32" [ref=f3e205] [cursor=pointer]:
+            - generic [ref=f3e206]: Saus Sambal 340ml
+            - generic [ref=f3e207]: Rp11.000
+            - generic [ref=f3e208]: stok 32
+          - button "Shampoo Sachet Rp1.500 stok 250" [ref=f3e209] [cursor=pointer]:
+            - generic [ref=f3e210]: Shampoo Sachet
+            - generic [ref=f3e211]: Rp1.500
+            - generic [ref=f3e212]: stok 250
+          - button "Susu UHT 1L Rp19.000 stok 19" [ref=f3e213] [cursor=pointer]:
+            - generic [ref=f3e214]: Susu UHT 1L
+            - generic [ref=f3e215]: Rp19.000
+            - generic [ref=f3e216]: stok 19
+          - button "Teh Celup Box Rp9.000 stok 30" [ref=f3e217] [cursor=pointer]:
+            - generic [ref=f3e218]: Teh Celup Box
+            - generic [ref=f3e219]: Rp9.000
+            - generic [ref=f3e220]: stok 30
+          - button "Telur Ayam 1kg Rp28.000 stok 35" [ref=f3e221] [cursor=pointer]:
+            - generic [ref=f3e222]: Telur Ayam 1kg
+            - generic [ref=f3e223]: Rp28.000
+            - generic [ref=f3e224]: stok 35
+          - button "Tepung Terigu 1kg Rp12.000 stok 45" [ref=f3e225] [cursor=pointer]:
+            - generic [ref=f3e226]: Tepung Terigu 1kg
+            - generic [ref=f3e227]: Rp12.000
+            - generic [ref=f3e228]: stok 45
+      - generic [ref=f3e229]:
+        - heading "Keranjang" [level=2] [ref=f3e230]
+        - paragraph [ref=f3e231]: Belum ada item.
+        - generic [ref=f3e232]: Diskon (Rp)
+        - spinbutton "Diskon (Rp)" [ref=f3e233]
+        - separator [ref=f3e234]
+        - generic [ref=f3e235]: "Subtotal: Rp0"
+        - generic [ref=f3e236]: "Total: Rp0"
+        - generic [ref=f3e237]: Bayar (Rp)
+        - spinbutton "Bayar (Rp)" [ref=f3e238]
+        - generic [ref=f3e239]: "Kembali: Rp0"
+        - button "BAYAR" [disabled] [ref=f3e240] [cursor=pointer]

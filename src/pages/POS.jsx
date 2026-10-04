@@ -10,7 +10,7 @@ import Scanner from '../components/Scanner.jsx'
 
 export default function POS() {
   const { user, logout } = useAuth()
-  const { refresh } = useSync()
+  const { refresh, dataVersion } = useSync()
   const { state, dispatch } = useCart()
   const [products, setProducts] = useState([])
   const [cats, setCats] = useState([])
@@ -25,7 +25,8 @@ export default function POS() {
     searchProducts(query, cat).then(setProducts)
     categories().then(setCats)
   }
-  useEffect(reload, [query, cat])
+  // reload saat query/cat berubah ATAU setelah pull sync membawa katalog baru
+  useEffect(reload, [query, cat, dataVersion])
 
   const { subtotal, total } = useMemo(() => {
     try {
