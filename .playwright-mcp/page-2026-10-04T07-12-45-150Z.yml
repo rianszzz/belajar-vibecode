@@ -1,0 +1,27 @@
+- generic [ref=f1e2]:
+  - navigation [ref=f1e3]:
+    - button "Kasir" [ref=f1e4] [cursor=pointer]
+    - button "Konflik" [active] [ref=f1e5] [cursor=pointer]
+    - button "Laporan" [ref=f1e6] [cursor=pointer]
+  - main [ref=f1e120]:
+    - generic [ref=f1e121]:
+      - heading "Konflik Stok" [level=1] [ref=f1e122]
+      - generic [ref=f1e123]:
+        - 'button "Status sinkronisasi: Tersinkron. Klik untuk sinkron manual." [ref=f1e124] [cursor=pointer]': 🟢 Tersinkron
+        - generic [ref=f1e125]: admin (admin)
+        - button "Keluar" [ref=f1e126] [cursor=pointer]
+    - generic [ref=f1e127]:
+      - generic [ref=f1e128]: DEVTEST-99 — 4/10/2026, 14.12.05
+      - table [ref=f1e129]:
+        - rowgroup [ref=f1e130]:
+          - row [ref=f1e131]:
+            - columnheader "Item" [ref=f1e132]
+            - columnheader "Diminta" [ref=f1e133]
+            - columnheader "Stok server" [ref=f1e134]
+        - rowgroup [ref=f1e135]:
+          - row [ref=f1e136]:
+            - cell "Produk Uji" [ref=f1e137]
+            - cell "5" [ref=f1e138]
+            - cell "2" [ref=f1e139]
+      - generic [ref=f1e140]: "Total transaksi: Rp5.000"
+      - button "Terima stok server" [ref=f1e141] [cursor=pointer]

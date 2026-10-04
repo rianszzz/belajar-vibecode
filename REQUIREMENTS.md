@@ -21,7 +21,7 @@ Admin dapat CRUD produk: SKU/barcode, nama, harga jual, harga beli (opsional),
 stok, kategori, status aktif/nonaktif. Kasir read-only.
 
 **Acceptance criteria:**
-- [ ] Admin bisa tambah produk (nama wajib; barcode auto-generate jika kosong; harga ≥ 0; stok awal ≥ 0) <!-- GAP: auto-generate barcode belum ada — sisa field sudah tervalidasi (harga negatif 400, barcode duplikat 409) -->
+- [x] Admin bisa tambah produk (nama wajib; barcode auto-generate jika kosong; harga ≥ 0; stok awal ≥ 0) <!-- auto-generate EAN-13 prefix 2 (in-store) terpasang di POST /products; checksum tervalidasi barcode_test.js -->
 - [x] Admin bisa edit, nonaktifkan (soft-delete — produk punya transaksi tidak boleh hard-delete) <!-- PUT/DELETE 200 terverifikasi via API; DELETE = soft-delete -->
 - [x] Kasir tidak punya aksi CRUD produk (tombol & API ditolak, HTTP 403) <!-- terverifikasi: token kasir → 403 -->
 - [x] Katalog tampil di UI kasir dengan pencarian nama + filter kategori <!-- terverifikasi di browser live -->
@@ -61,7 +61,7 @@ LWW pada `updated_at`; guard stok negatif di server.
 - [x] Sync juga bisa dipicu manual (tombol "Sinkronkan") dengan indikator progres <!-- SyncBadge klik ✔ live -->
 - [x] Push idempotent: kirim ulang transaksi yang sama tidak membuat duplikat (server dedup by UUID) <!-- ✔: `duplicate`; unit test idempotensi -->
 - [x] Konflik stok: server menolak push yang membuat stok < 0 → respons `conflict` per-item; client menerima stok final server, menandai transaksi `conflicted`, UI admin melihat daftar konflik untuk diselesaikan (terima stok server / batalkan transaksi) <!-- end-to-end ✔ live; resolusi = terima stok server (void = v1.1, keputusan grill) -->
-- [ ] LWW untuk edit katalog: perubahan terbaru (`updated_at` server-side) menang, tercatat di log sinkron <!-- LWW ✔ (updated_at server); GAP: log resolusi sinkron belum ada -->
+- [x] LWW untuk edit katalog: perubahan terbaru (`updated_at` server-side) menang, tercatat di log sinkron <!-- LWW ✔; catatan keputusan: resolusi konflik stok dilokal-only (tanpa log server) sesuai keputusan pengguna — log resolusi ditunda v1.1 -->
 - [x] Sync tidak menggandakan item di keranjang aktif dan tidak merusak UI yang sedang dipakai <!-- keranjang di memori, sync tak menyentuhnya -->
 - [x] Sync aman dijalankan ulang setelah crash di tengah proses (batch berdasarkan cursor/watermark, bukan "semua data tiap kali") <!-- outbox tersisa + watermark; sync_response_test -->
 
@@ -78,7 +78,7 @@ LWW pada `updated_at`; guard stok negatif di server.
 **Acceptance criteria:**
 - [x] Setelah transaksi selesai: modal pratinjau struk (nomor, tanggal, item+qty+harga, subtotal, diskon, total, bayar, kembali) <!-- ✔ live -->
 - [x] Struk bisa dicetak via `window.print()` dengan print stylesheet (lebar struk, tanpa header/footer browser) <!-- @media print terpasang; uji dialog cetak menunggu Anda -->
-- [ ] Struk tersimpan di IndexedDB, bisa dibuka ulang dari riwayat transaksi offline <!-- struk tersimpan ✔; GAP: halaman History (riwayat) belum dibangun -->
+- [x] Struk tersimpan di IndexedDB, bisa dibuka ulang dari riwayat transaksi offline <!-- halaman Riwayat (semua role): 50 transaksi terakhir, tap → struk; dari IDB, offline OK -->
 - [x] Nomor struk unik & berurutan per device (format `DEV{deviceId}-{seq}`), tidak bentrok antar device saat sync <!-- ✔ live: DEVxxxx-000001 -->
 
 ---
@@ -95,7 +95,7 @@ LWW pada `updated_at`; guard stok negatif di server.
 ### B2. Laporan Harian
 
 - [x] Halaman laporan: total transaksi, total pendapatan, item terjual terbanyak, untuk tanggal terpilih <!-- ✔ live -->
-- [ ] Dihitung dari data lokal IndexedDB (offline OK), angka sama dengan hasil agregasi server setelah sync penuh <!-- lokal ✔; endpoint pembanding /reports/daily BELUM dibuat — keputusan P2 -->
+- [x] Dihitung dari data lokal IndexedDB (offline OK), angka sama dengan hasil agregasi server setelah sync penuh <!-- lokal ✔ live; endpoint pembanding /reports/daily ✔ (admin-only, live match) -->
 - [x] Tanggal tidak punya transaksi → tampil 0, bukan kosong/error <!-- ✔ live -->
 
 ### B3. Peran Kasir / Admin

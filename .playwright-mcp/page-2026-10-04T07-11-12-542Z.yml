@@ -1,0 +1,13 @@
+- generic [ref=e2]:
+  - navigation [ref=e11]:
+    - button "Kasir" [ref=e12] [cursor=pointer]
+    - button "Konflik" [active] [ref=e13] [cursor=pointer]
+    - button "Laporan" [ref=e14] [cursor=pointer]
+  - main [ref=e128]:
+    - generic [ref=e129]:
+      - heading "Konflik Stok" [level=1] [ref=e130]
+      - generic [ref=e131]:
+        - 'button "Status sinkronisasi: Tersinkron. Klik untuk sinkron manual." [ref=e132] [cursor=pointer]': 🟢 Tersinkron
+        - generic [ref=e133]: admin (admin)
+        - button "Keluar" [ref=e134] [cursor=pointer]
+    - paragraph [ref=e135]: Tidak ada konflik. 🎉

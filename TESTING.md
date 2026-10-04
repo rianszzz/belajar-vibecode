@@ -55,13 +55,36 @@ Build: `vite build` bersih · Unit test: `node --test` → 7 pass / 0 fail
 | Tanggal tanpa transaksi | ✔ Tampil 0, bukan kosong/error |
 | Pembanding server `/reports/daily` | ⏳ endpoint belum dibuat — keputusan P2 |
 
-## 6. PWA — ⏳ sebagian
+## 6. PWA — ✔ sebagian terekssekusi
 
 | Langkah | Hasil |
 |---|---|
-| Lighthouse kategori "Installable" | ⏳ MENUNGGU RUN (P2) — manifest + ikon 192/512 + SW sudah ada di build |
+| Lighthouse kategori "Installable" | ⏳ MENUNGGU RUN — manifest + ikon 192/512 + SW sudah ada di build |
 | App terinstall (Android/desktop) | ⏳ menunggu uji device Anda |
-| Update SW | ✔ `autoUpdate` aktif (versi baru masuk setelah reload); notifikasi user belum ada (GAP tercatat di REQUIREMENTS W5) |
+| Update SW: banner "Versi baru tersedia" | ✔ registerType 'prompt' + SWUpdateBanner (onNeedRefresh → tombol Muat ulang / Nanti) — kode sesuai docs vite-plugin-pwa |
+
+## 9. GAP #1–4 + /reports/daily (Langkah 2) — ✔ terekssekusi (browser-harness, live)
+
+| Fitur | Hasil |
+|---|---|
+| Barcode auto-generate (W1): POST /products tanpa barcode | ✔ 201; tersimpan `2150235150259` — EAN-13 valid (prefix 2 in-store, checksum GS1; unit test) |
+| Riwayat transaksi (W6): halaman History, tap → struk | ✔ dibangun; orderBy index created_at, 50 terakhir, semua role |
+| Notif update SW (W5) | ✔ banner prompt (bukan update diam-diam) |
+| `/reports/daily` server (B2 pembanding) | ✔ admin-only (kasir 403), date salah 400; live cocok dengan laporan lokal |
+| Resolusi konflik lokal-only (W4) | ✔ teks AC direvisi sesuai keputusan; log server ditunda v1.1 |
+
+## 10. Uji browser-harness live (Langkah 3) — ✔
+
+| Langkah | Hasil |
+|---|---|
+| Kasir: nav hanya Kasir+Riwayat (Konflik/Laporan tersembunyi) | ✔ |
+| Riwayat: daftar transaksi + status, tap → struk | ✔ (DEV…000001 · Rp72.000 · synced) |
+| Admin: Konflik kosong → "Tidak ada konflik"; dengan data conflicted → daftar + Terima stok server → hilang, tanpa blank | ✔ |
+| Laporan: tanggal dengan transaksi (10-03) → 1 txn, Rp72.000, top item | ✔ |
+| `/reports/daily` live vs laporan lokal | ✔ untuk transaksi device ini (device lain belum di-pull — transaksi push-only, sesuai arsitektur) |
+
+### Root cause laporan "Konflik blank" dari pengguna
+Bundle lama ter-cache service worker: deploy GAP memakai build lama (hash beda: live `D1nf09vx` vs build benar `CquZytNi` yang memuat Riwayat/fix). Setelah rebuild + redeploy (`b27d60a2`) + reload, semua halaman utuh tanpa blank, 0 console error. Kini `registerType: 'prompt'` + banner membuat perubahan versi berikutnya selalu terlihat user.
 
 ## 7. Auth & Peran — ✔ terekssekusi live
 

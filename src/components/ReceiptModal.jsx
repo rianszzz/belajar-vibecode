@@ -7,7 +7,7 @@ function lines(txn) {
     txn.receipt_no,
     new Date(txn.created_at).toLocaleString('id-ID'),
     `--------------------------------`,
-    ...txn.items.map(
+    ...(Array.isArray(txn.items) ? txn.items : []).map(
       (i) => `${i.name}\n  ${i.qty} x ${formatRp(i.price).padEnd(14)} ${formatRp(i.qty * i.price)}`
     ),
     `--------------------------------`,

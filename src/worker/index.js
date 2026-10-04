@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { sign, verify } from 'hono/jwt'
 import { verifyPassword, seedUsers } from './auth.js'
+import { generateEan13 } from './barcode.js'
 
 const api = new Hono().basePath('/api')
 
@@ -69,7 +70,7 @@ api.post('/products', requireAuth, requireAdmin, async (c) => {
   const price = Math.round(Number(p.price))
   if (!name) return c.json({ error: 'Nama wajib diisi' }, 400)
   if (!Number.isFinite(price) || price < 0) return c.json({ error: 'Harga tidak valid' }, 400)
-  const barcode = p.barcode ? String(p.barcode) : null
+  const barcode = p.barcode ? String(p.barcode) : generateEan13() // AC W1: auto-generate jika kosong
   if (barcode) {
     const dup = await c.env.DB.prepare('SELECT uuid FROM products WHERE barcode = ?').bind(barcode).first()
     if (dup) return c.json({ error: 'Barcode sudah dipakai produk lain' }, 409)
@@ -202,6 +203,37 @@ async function applyTxn(env, txn) {
     return { uuid, status: 'error', message: e.message }
   }
 }
+
+// ==== Laporan harian server (pembanding laporan lokal, AC B2) ====
+
+api.get('/reports/daily', requireAuth, requireAdmin, async (c) => {
+  const date = c.req.query('date')
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date || '')) return c.json({ error: 'Format tanggal YYYY-MM-DD' }, 400)
+  // catatan: pencocokan created_at pakai UTC (ISO tersimpan UTC); selisih dengan
+  // tanggal lokal client ≤1 hari zona — cukup sebagai pembanding agregat
+  const rows = await c.env.DB.prepare(
+    'SELECT total, items, created_at FROM transactions WHERE created_at LIKE ?'
+  )
+    .bind(date + '%')
+    .all()
+  const itemQty = new Map()
+  let revenue = 0
+  for (const r of rows.results) {
+    revenue += Math.round(Number(r.total) || 0)
+    try {
+      for (const i of JSON.parse(r.items || '[]')) {
+        itemQty.set(String(i.name), (itemQty.get(String(i.name)) || 0) + Math.round(Number(i.qty) || 0))
+      }
+    } catch {
+      // items korup: skip row, laporan tetap jalan
+    }
+  }
+  const topItems = [...itemQty.entries()]
+    .map(([name, qty]) => ({ name, qty }))
+    .sort((a, b) => b.qty - a.qty)
+    .slice(0, 5)
+  return c.json({ date, count: rows.results.length, revenue, topItems })
+})
 
 export default {
   async fetch(request, env) {
