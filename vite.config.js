@@ -19,11 +19,15 @@ export default defineConfig({
         icons: [
           { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512.png', sizes: '512x512', type: 'image/png' },
+          // maskable: pakai file sama (lingkaran tengah sudah ada safe-zone-nya)
+          { src: 'pwa-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: 'pwa-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {
         // API sync tidak pernah di-cache; katalog GET via network-first di bawah
         navigateFallback: 'index.html',
+        clientsClaim: true, // SW mengontrol page sejak first load (audit "controls page")
         runtimeCaching: [
           {
             urlPattern: /\/api\/v1\/products\/changes/,

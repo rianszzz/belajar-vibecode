@@ -6,7 +6,8 @@ import { getSession, isTokenExpired } from '../db/users.js'
 let syncing = false
 
 // Idempoten: boleh dipanggil berulang kapan pun; lock mencegah dobel loop
-export async function syncNow() {
+// force=true: abaikan backoff (dipakai tombol sync manual — niat user = coba sekarang)
+export async function syncNow(force = false) {
   if (syncing) return { skipped: true }
   if (!navigator.onLine) return { offline: true }
   // tanpa sesi valid, pull pasti 401 — skip senyap (bukan error)
@@ -14,7 +15,7 @@ export async function syncNow() {
   if (!session || isTokenExpired(session.token)) return { noSession: true }
   syncing = true
   try {
-    const pushRes = await pushPending()
+    const pushRes = await pushPending(force)
     const pullRes = await pullProducts()
     return { pushed: pushRes, pulled: pullRes }
   } finally {
@@ -22,8 +23,8 @@ export async function syncNow() {
   }
 }
 
-async function pushPending() {
-  const batch = await dueBatch(50)
+async function pushPending(force = false) {
+  const batch = await dueBatch(50, force)
   if (batch.length === 0) return { processed: 0 }
 
   const res = await api('/transactions/batch', {

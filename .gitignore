@@ -3,3 +3,4 @@ dist/
 server/data.db*
 dev-dist/
 .DS_Store
+.dev.vars.production-note

@@ -17,7 +17,7 @@ export function SyncProvider({ children }) {
 
   const sync = useCallback(async () => {
     setBusy(true)
-    const res = await syncNow()
+    const res = await syncNow(true) // manual = force: abaikan backoff, kirim semua sekarang
     setBusy(false)
     if (!res.offline && !res.skipped) {
       setLastSync(new Date().toLocaleTimeString('id-ID'))

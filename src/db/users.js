@@ -1,7 +1,12 @@
 import { db } from './db.js'
 
 export async function saveSession(user, token) {
-  await db.users.put({ username: user.username, role: user.role, token, saved_at: new Date().toISOString() })
+  // satu device = satu user aktif: clear dulu agar tidak menumpuk baris
+  // (baris lama token expired membuat getSession mengambil sesi mati)
+  await db.transaction('rw', db.users, async () => {
+    await db.users.clear()
+    await db.users.put({ username: user.username, role: user.role, token, saved_at: new Date().toISOString() })
+  })
 }
 
 export async function getSession() {

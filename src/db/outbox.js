@@ -8,10 +8,15 @@ function backoffMs(attempts) {
   return backoffFor(attempts)
 }
 
-export async function dueBatch(limit = 50) {
-  const now = Date.now()
-  const all = await db.outbox.where('retry_at').belowOrEqual(now).toArray()
-  return all.sort((a, b) => a.retry_at - b.retry_at).slice(0, limit)
+// Pola filter dipisah agar testable (mengikuti pola backoffFor) — jangan copy di test
+export function filterDue(all, now, force) {
+  const due = force ? all : all.filter((r) => r.retry_at <= now)
+  return due.sort((a, b) => a.retry_at - b.retry_at).slice(0, 50)
+}
+
+export async function dueBatch(limit = 50, force = false) {
+  const all = await db.outbox.toArray()
+  return filterDue(all, Date.now(), force).slice(0, limit)
 }
 
 export function markSuccess(txnUuid) {

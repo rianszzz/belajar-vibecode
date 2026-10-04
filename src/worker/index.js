@@ -1,12 +1,12 @@
 import { Hono } from 'hono'
 import { sign, verify } from 'hono/jwt'
-import { verifyPassword, seedUsers } from './auth.js'
+import { verifyPassword, hashPassword, seedUsers } from './auth.js'
 import { generateEan13 } from './barcode.js'
 
 const api = new Hono().basePath('/api')
 
 // seed admin default sekali — ponytail: kredensial default admin/admin123,
-// WAJIB ganti via endpoint admin (T7+) sebelum produksi nyata
+// WAJIB ganti via POST /api/auth/change-password sebelum dipakai toko nyata
 api.use('*', async (c, next) => { await seedUsers(c.env); await next() })
 
 // guard: verifikasi JWT + role opsional (requireRole('admin'))
@@ -47,6 +47,23 @@ api.post('/auth/login', async (c) => {
 
   const token = await sign({ sub: user.username, role: user.role, exp: Math.floor(Date.now() / 1000) + 12 * 3600 }, c.env.JWT_SECRET)
   return c.json({ token, user: { username: user.username, role: user.role } })
+})
+
+// Ganti password sendiri (Opsi D — akhir masa kredensial default)
+api.post('/auth/change-password', requireAuth, async (c) => {
+  const { oldPassword, newPassword } = await c.req.json().catch(() => ({}))
+  if (!oldPassword || !newPassword || String(newPassword).length < 8) {
+    return c.json({ error: 'Password baru minimal 8 karakter' }, 400)
+  }
+  const { sub } = c.get('jwtPayload')
+  const user = await c.env.DB.prepare('SELECT username, password_hash FROM users WHERE username = ?').bind(sub).first()
+  if (!user || !(await verifyPassword(oldPassword, user.password_hash))) {
+    return c.json({ error: 'Password lama salah' }, 401)
+  }
+  await c.env.DB.prepare('UPDATE users SET password_hash = ? WHERE username = ?')
+    .bind(await hashPassword(newPassword), sub)
+    .run()
+  return c.json({ ok: true })
 })
 
 // ==== Katalog (T3) ====

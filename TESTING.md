@@ -119,3 +119,66 @@ Deploy final: `43593a4c`.
 9. Checkout gagal "null.slice" — `device_id` belum dibuat saat boot → `ensureDeviceId()` di checkout.
 10. Pull tidak menerapkan stok baru dari push — server UPDATE tidak menaikkan `updated_at` → watermark tidak melihat perubahan. Fix: `updated_at = ?` (now) dalam UPDATE stok.
 11. Uji verifikasi penuh (live): transaksi → push `synced` → stok server 50→49 → pull menerapkan stok baru ke IndexedDB lokal (49). ✔
+
+## 11. Opsi A–D (finalisasi) — 2026-10-04
+
+### A. Lighthouse (live) — ✔
+
+| Kategori | Skor |
+|---|---|
+| Performance | 99 |
+| Accessibility | 100 |
+| Best Practices | 100 |
+| SEO | 100 (setelah fix meta description + robots.txt) |
+| **PWA** | **100** (setelah fix maskable icon + clientsClaim) |
+
+Catatan: lighthouse@10 sempat FAIL audit `service-worker` di headless — false negative (SW aktif & controlling terverifikasi via CDP di browser nyata; run final memberi PWA 100). Fix yang diambil: `clientsClaim: true`, ikon `purpose: maskable`, meta description, robots.txt, favicon.svg (menghilangkan 404 console).
+
+### B. Token expired end-to-end — ✔ + 1 bug bonus diperbaiki
+
+| Langkah | Hasil |
+|---|---|
+| Buat transaksi pending, tamper token jadi exp 2001 | ✔ |
+| Reload → client deteksi expired → minta login ulang | ✔ |
+| Transaksi pending & riwayat tetap utuh | ✔ outbox=1, txns utuh |
+| Login ulang → sync → pending terkirim | ✔ outbox=0, semua `synced` |
+
+**Bug bonus ditemukan:** re-login tanpa logout menumpuk baris di store `users` (admin lama token mati + kasir baru); `getSession` mengambil `all[0]` → sesi mati dipakai → sync macet senyap. Fix: `saveSession` = clear + put (satu device = satu user aktif).
+
+### B2. Bug "offline → online, sync tak jalan" (laporan pengguna, localhost) — ✔ root cause + fix
+
+| Langkah | Hasil |
+|---|---|
+| Reproduksi: offline → transaksi → online → klik sync | ✔ REPRODUCED: badge "Sinkronkan (4)" menetap, POST batch tak terkirim |
+| Akar masalah | ✔ **Backoff vs tombol manual**: transaksi offline gagal berkali-kali → `attempts` naik → backoff 30 menit. Tombol sync manual memakai `dueBatch` yang hanya mengambil item `retry_at <= now` → item yang masih dalam backoff TIDAK dikirim walau user minta eksplisit. Transaksi baru (attempts=0) terkirim; yang lama tersangkut — tampak "sync tidak jalan" |
+| Fix | ✔ `dueBatch(limit, force)` + `syncNow(force)` — tombol sync manual = force (abaikan backoff, kirim semua sekarang); auto-sync (event online/interval/startup) tetap hormati backoff |
+| Verifikasi pasca-fix | ✔ offline → transaksi → online → klik sync → outbox=0, semua `synced` (tanpa reset manual) |
+| Review agent | ✔ `markRetry` tetap naikkan backoff setelah force-fail (tidak reset); auto-sync tidak regresi; test membungkus logika asli (`filterDue` diekstrak dari outbox.js — bukan copy) |
+
+Deploy: `6a1f4958`.
+
+### C. Checklist uji device fisik (untuk dijalankan pemilik)
+
+**Android Chrome — Install & offline:**
+1. Buka https://belajar-vibecode.ryandraa27.workers.dev → menu ⋮ → "Tambahkan ke layar utama"
+2. Buka dari ikon home screen → harus tanpa address bar (standalone)
+3. Aktifkan airplane mode → buat 2–3 transaksi → struk muncul
+4. Matikan airplane mode → tunggu ≤30 detik → badge "Tersinkron", tidak ada duplikat di Riwayat
+
+**Android Chrome — Scan kamera (B1):**
+5. Halaman Kasir → 📷 Scan → izinkan kamera
+6. Arahkan ke barcode EAN-13 fisik (kemasan produk) → item masuk keranjang
+7. Tolak izin kamera (via setting browser) → buka scan → pesan inline, bukan crash
+
+**iOS Safari — fallback jsqr:**
+8. Buka URL → scan → arahkan barcode → item masuk keranjang
+9. Tambah ke Home Screen → buka standalone → katalog & transaksi offline jalan
+
+Laporan hasil: tick AC terkait di REQUIREMENTS.md yang terbukti.
+
+### D. Kredensial default — ✔ diganti di remote
+
+- Endpoint baru: `POST /api/auth/change-password` (auth wajib, self-service, verifikasi password lama, min 8 karakter)
+- Uji lokal: lama-salah 401 · baru-pendek 400 · valid ok · login password baru ok · password lama ditolak
+- Remote: admin & kasir sudah diganti dari default. Kredensial baru disimpan di `.dev.vars.production-note` (gitignore) — **berikan ke pemilik toko, hapus setelah disimpan aman**.
+- Seed default `admin123/kasir123` tetap dibuat pada DB kosong (memudahkan setup awal) — WAJIB langsung diganti setelah setup toko nyata.
