@@ -9,6 +9,7 @@ import Conflicts from './pages/Conflicts.jsx'
 import Report from './pages/Report.jsx'
 import History from './pages/History.jsx'
 import SWUpdateBanner from './components/SWUpdateBanner.jsx'
+import SyncBadge from './components/SyncBadge.jsx'
 
 startAutoSync()
 
@@ -25,7 +26,7 @@ export default function App() {
 }
 
 function AppInner() {
-  const { user, loading } = useAuth()
+  const { user, loading, logout } = useAuth()
   const [page, setPage] = useState('pos')
 
   if (loading) return <main style={{ padding: 24 }}>Memuat…</main>
@@ -38,16 +39,22 @@ function AppInner() {
   return (
     <>
       <SWUpdateBanner />
-      <nav style={{ display: 'flex', gap: 4, padding: '8px 16px', background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
-        <button onClick={() => setPage('pos')} style={{ padding: '6px 14px', background: page === 'pos' ? 'var(--primary)' : 'transparent', color: page === 'pos' ? 'var(--primary-ink)' : 'var(--text)', border: 'none', borderRadius: 'var(--radius)' }}>Kasir</button>
-        <button onClick={() => setPage('history')} style={{ padding: '6px 14px', background: page === 'history' ? 'var(--primary)' : 'transparent', color: page === 'history' ? 'var(--primary-ink)' : 'var(--text)', border: 'none', borderRadius: 'var(--radius)' }}>Riwayat</button>
-        {isAdmin && (
-          <>
-            <button onClick={() => setPage('conflicts')} style={{ padding: '6px 14px', background: page === 'conflicts' ? 'var(--primary)' : 'transparent', color: page === 'conflicts' ? 'var(--primary-ink)' : 'var(--text)', border: 'none', borderRadius: 'var(--radius)' }}>Konflik</button>
-            <button onClick={() => setPage('report')} style={{ padding: '6px 14px', background: page === 'report' ? 'var(--primary)' : 'transparent', color: page === 'report' ? 'var(--primary-ink)' : 'var(--text)', border: 'none', borderRadius: 'var(--radius)' }}>Laporan</button>
-          </>
-        )}
-      </nav>
+      <header className="app-header">
+        <div className="app-header-inner">
+          <div className="brand">
+            <img src="/logo.svg" alt="" aria-hidden="true" />
+            <span className="brand-name">Mini POS</span>
+            <SyncBadge />
+          </div>
+          <nav className="app-nav" aria-label="Navigasi utama">
+            <button onClick={() => setPage('pos')} className={page === 'pos' ? 'active' : ''}>Kasir</button>
+            <button onClick={() => setPage('history')} className={page === 'history' ? 'active' : ''}>Riwayat</button>
+            {isAdmin && <button onClick={() => setPage('conflicts')} className={page === 'conflicts' ? 'active' : ''}>Konflik</button>}
+            {isAdmin && <button onClick={() => setPage('report')} className={page === 'report' ? 'active' : ''}>Laporan</button>}
+            <button onClick={logout}>Keluar</button>
+          </nav>
+        </div>
+      </header>
       {page === 'pos' && <POS />}
       {page === 'history' && <History />}
       {isAdmin && page === 'conflicts' && <Conflicts />}

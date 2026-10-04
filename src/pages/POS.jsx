@@ -1,15 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useAuth } from '../state/auth-context.jsx'
-import { useCart } from '../state/cart-context.jsx'
 import { useSync } from '../state/sync-context.jsx'
+import { useCart } from '../state/cart-context.jsx'
 import { cartTotal, formatRp, changeDue } from '../lib/money.js'
 import { searchProducts, categories, checkout } from '../db/txns.js'
 import ReceiptModal from '../components/ReceiptModal.jsx'
-import SyncBadge from '../components/SyncBadge.jsx'
 import Scanner from '../components/Scanner.jsx'
 
 export default function POS() {
-  const { user, logout } = useAuth()
   const { refresh, dataVersion } = useSync()
   const { state, dispatch } = useCart()
   const [products, setProducts] = useState([])
@@ -60,17 +57,8 @@ export default function POS() {
   }
 
   return (
-    <main style={{ padding: 16 }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ fontSize: 18, margin: 0 }}>Kasir</h1>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <SyncBadge />
-          <span style={{ color: 'var(--muted)' }}>{user.username} ({user.role})</span>
-          <button onClick={logout} style={{ padding: '6px 12px' }}>Keluar</button>
-        </div>
-      </header>
-
-      <div style={{ display: 'flex', gap: 16, marginTop: 16, flexWrap: 'wrap' }}>
+    <main style={{ padding: 'var(--space-lg)' }}>
+      <div style={{ display: 'flex', gap: 'var(--space-lg)', flexWrap: 'wrap' }}>
         {/* Katalog */}
         <section style={{ flex: 2, minWidth: 300 }}>
           <input
@@ -85,62 +73,66 @@ export default function POS() {
               📷 Scan
             </button>
           </div>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '8px 0' }}>
-            <button onClick={() => setCat('')} style={{ padding: '6px 10px', background: !cat ? 'var(--primary)' : 'var(--surface)' }}>Semua</button>
+          <div style={{ display: 'flex', gap: 'var(--space-xs)', flexWrap: 'wrap', margin: 'var(--space-sm) 0' }}>
+            <button onClick={() => setCat('')} className={`cat-pill ${!cat ? 'active' : ''}`}>Semua</button>
             {cats.map((c) => (
-              <button key={c} onClick={() => setCat(c)} style={{ padding: '6px 10px', background: cat === c ? 'var(--primary)' : 'var(--surface)' }}>{c}</button>
+              <button key={c} onClick={() => setCat(c)} className={`cat-pill ${cat === c ? 'active' : ''}`}>{c}</button>
             ))}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 8 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 'var(--space-sm)' }}>
             {products.map((p) => (
               <button
                 key={p.uuid}
                 onClick={() => dispatch({ type: 'add', product: p })}
                 disabled={p.stock === 0}
-                style={{
-                  padding: 10, textAlign: 'left', background: 'var(--surface)',
-                  border: '1px solid var(--border)', borderRadius: 'var(--radius)',
-                  opacity: p.stock === 0 ? 0.5 : 1, cursor: 'pointer',
-                }}
+                className="product-card"
               >
-                <div style={{ fontWeight: 600, fontSize: 13 }}>{p.name}</div>
-                <div>{formatRp(p.price)}</div>
-                <div style={{ color: 'var(--muted)', fontSize: 12 }}>stok {p.stock}</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 4 }}>
+                  <span className="product-chip">{p.category || '—'}</span>
+                  <span className="stock-chip">Stok: {p.stock}</span>
+                </div>
+                <div className="t-label-md" style={{ margin: 'var(--space-xs) 0' }}>{p.name}</div>
+                <div className="product-barcode">{p.barcode || '—'}</div>
+                <div className="product-price">{formatRp(p.price)}</div>
               </button>
             ))}
           </div>
         </section>
 
         {/* Keranjang */}
-        <section style={{ flex: 1, minWidth: 280, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 12 }}>
-          <h2 style={{ fontSize: 15, margin: 0 }}>Keranjang</h2>
+        <section style={{ flex: 1, minWidth: 300, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-md)' }}>
+          <h2 className="t-headline-md" style={{ margin: 0 }}>Keranjang</h2>
           {state.items.length === 0 && <p style={{ color: 'var(--muted)' }}>Belum ada item.</p>}
           {state.items.map((i) => (
-            <div key={i.uuid} style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '8px 0' }}>
-              <div style={{ flex: 1, fontSize: 13 }}>
-                {i.name}
-                <div style={{ color: 'var(--muted)' }}>{formatRp(i.price)} × {i.qty}</div>
+            <div key={i.uuid} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', margin: 'var(--space-sm) 0', background: 'var(--surface-low)', borderRadius: 'var(--radius)', padding: 'var(--space-sm)' }}>
+              <div style={{ flex: 1 }}>
+                <div className="t-label-sm">{i.name}</div>
+                <div className="t-body-sm" style={{ color: 'var(--muted)' }}>{formatRp(i.price)} × {i.qty}</div>
               </div>
-              <button aria-label={`Kurangi ${i.name}`} onClick={() => dispatch({ type: 'setQty', uuid: i.uuid, qty: i.qty - 1 })} style={{ width: 32, height: 32 }}>−</button>
-              <span style={{ minWidth: 20, textAlign: 'center' }}>{i.qty}</span>
-              <button aria-label={`Tambah ${i.name}`} onClick={() => dispatch({ type: 'setQty', uuid: i.uuid, qty: i.qty + 1 })} style={{ width: 32, height: 32 }}>+</button>
+              <button aria-label={`Kurangi ${i.name}`} className="qty-btn" onClick={() => dispatch({ type: 'setQty', uuid: i.uuid, qty: i.qty - 1 })}>−</button>
+              <span className="t-headline-md" style={{ minWidth: 28, textAlign: 'center' }}>{i.qty}</span>
+              <button aria-label={`Tambah ${i.name}`} className="qty-btn" onClick={() => dispatch({ type: 'setQty', uuid: i.uuid, qty: i.qty + 1 })}>+</button>
             </div>
           ))}
-          <label htmlFor="disc" style={{ display: 'block', marginTop: 8 }}>Diskon (Rp)</label>
-          <input id="disc" type="number" min="0" value={state.discount || ''} onChange={(e) => dispatch({ type: 'discount', value: Number(e.target.value) || 0 })} style={{ width: '100%', padding: 8 }} />
-          <hr />
-          <div>Subtotal: {formatRp(subtotal)}</div>
-          <div style={{ fontSize: 18, fontWeight: 700 }}>Total: {formatRp(total)}</div>
-          <label htmlFor="paid" style={{ display: 'block', marginTop: 8 }}>Bayar (Rp)</label>
-          <input id="paid" type="number" min="0" value={paid} onChange={(e) => setPaid(e.target.value)} style={{ width: '100%', padding: 8 }} />
-          <div>Kembali: {formatRp(change)}</div>
+          <label htmlFor="disc" className="t-label-sm" style={{ display: 'block', marginTop: 'var(--space-sm)' }}>Diskon (Rp)</label>
+          <input id="disc" type="number" min="0" value={state.discount || ''} onChange={(e) => dispatch({ type: 'discount', value: Number(e.target.value) || 0 })} className="input-mono" style={{ fontFamily: 'var(--font)', fontWeight: 400, fontSize: 15 }} />
+          <hr className="receipt-divider" />
+          <div className="t-body-md" style={{ display: 'flex', justifyContent: 'space-between' }}><span>Subtotal</span><span className="t-mono">{formatRp(subtotal)}</span></div>
+          <div className="t-headline-lg" style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--primary)' }}><span>Total</span><span>{formatRp(total)}</span></div>
+          <label htmlFor="paid" className="t-label-sm" style={{ display: 'block', marginTop: 'var(--space-sm)' }}>Uang Diterima (Rp)</label>
+          <input id="paid" type="number" min="0" value={paid} onChange={(e) => setPaid(e.target.value)} className="input-mono" />
+          <div className="change-box" style={{ marginTop: 'var(--space-sm)' }}>
+            <span className="t-body-sm">Kembali:</span>
+            <span className="t-headline-md t-mono">{formatRp(change)}</span>
+          </div>
           {error && <p role="alert" style={{ color: 'var(--danger)' }}>{error}</p>}
           <button
             onClick={onPay}
             disabled={state.items.length === 0 || (paid !== '' && change < 0)}
-            style={{ width: '100%', marginTop: 12, padding: 14, background: 'var(--primary)', color: 'var(--primary-ink)', border: 'none', borderRadius: 'var(--radius)', fontSize: 16, fontWeight: 700 }}
+            className="btn-primary"
+            style={{ marginTop: 'var(--space-sm)' }}
           >
-            BAYAR
+            BAYAR SEKARANG
           </button>
         </section>
       </div>

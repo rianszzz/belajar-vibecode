@@ -8,7 +8,7 @@ export default defineConfig({
     VitePWA({
       // 'prompt' agar banner "versi baru tersedia" tampil (AC W5); bukan autoUpdate diam-diam
       registerType: 'prompt',
-      includeAssets: ['favicon.svg'],
+      includeAssets: ['favicon.svg', 'logo.svg', 'robots.txt'],
       manifest: {
         name: 'Mini POS',
         short_name: 'MiniPOS',

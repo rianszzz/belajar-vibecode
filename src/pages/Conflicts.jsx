@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useAuth } from '../state/auth-context.jsx'
 import { conflictedTxns, resolveConflict } from '../db/conflicts.js'
 import { formatRp } from '../lib/money.js'
-import SyncBadge from '../components/SyncBadge.jsx'
 
 export default function Conflicts() {
-  const { user, logout } = useAuth()
   const [txns, setTxns] = useState([])
 
   const reload = () => conflictedTxns().then(setTxns)
@@ -18,21 +15,14 @@ export default function Conflicts() {
   }
 
   return (
-    <main style={{ padding: 16 }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ fontSize: 18, margin: 0 }}>Konflik Stok</h1>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <SyncBadge />
-          <span style={{ color: 'var(--muted)' }}>{user.username} ({user.role})</span>
-          <button onClick={logout} style={{ padding: '6px 12px' }}>Keluar</button>
-        </div>
-      </header>
+    <main style={{ padding: 'var(--space-lg)', maxWidth: 640, margin: '0 auto' }}>
+      <h1 className="t-headline-md" style={{ marginTop: 0 }}>Konflik Stok</h1>
 
       {txns.length === 0 && <p style={{ color: 'var(--muted)', marginTop: 16 }}>Tidak ada konflik. 🎉</p>}
 
       {txns.map((txn) => (
-        <div key={txn.uuid} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 12, marginTop: 12 }}>
-          <div style={{ fontWeight: 700, fontSize: 14 }}>
+        <div key={txn.uuid} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-md)', marginTop: 'var(--space-sm)' }}>
+          <div className="t-label-sm t-mono">
             {txn.receipt_no} — {new Date(txn.created_at).toLocaleString('id-ID')}
           </div>
           <table style={{ width: '100%', marginTop: 8, fontSize: 13, borderCollapse: 'collapse' }}>

@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useAuth } from '../state/auth-context.jsx'
 import { dailyReport, localDateStr } from '../db/reports.js'
 import { formatRp } from '../lib/money.js'
-import SyncBadge from '../components/SyncBadge.jsx'
 
 export default function Report() {
-  const { user, logout } = useAuth()
   const [date, setDate] = useState(localDateStr(new Date()))
   const [rep, setRep] = useState(null)
 
@@ -14,33 +11,26 @@ export default function Report() {
   }, [date])
 
   return (
-    <main style={{ padding: 16 }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ fontSize: 18, margin: 0 }}>Laporan Harian</h1>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <SyncBadge />
-          <span style={{ color: 'var(--muted)' }}>{user.username} ({user.role})</span>
-          <button onClick={logout} style={{ padding: '6px 12px' }}>Keluar</button>
-        </div>
-      </header>
+    <main style={{ padding: 'var(--space-lg)', maxWidth: 640, margin: '0 auto' }}>
+      <h1 className="t-headline-md" style={{ marginTop: 0 }}>Laporan Harian</h1>
 
-      <label htmlFor="repdate" style={{ display: 'block', marginTop: 16 }}>Tanggal</label>
-      <input id="repdate" type="date" value={date} onChange={(e) => setDate(e.target.value)} style={{ padding: 8 }} />
+      <label htmlFor="repdate" className="t-label-sm" style={{ display: 'block', marginTop: 'var(--space-md)' }}>Tanggal</label>
+      <input id="repdate" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input-mono" style={{ width: 'auto' }} />
 
       {rep && (
         <>
-          <div style={{ display: 'flex', gap: 12, marginTop: 16, flexWrap: 'wrap' }}>
-            <div style={{ flex: 1, minWidth: 160, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 16 }}>
-              <div style={{ color: 'var(--muted)', fontSize: 13 }}>Transaksi</div>
-              <div style={{ fontSize: 24, fontWeight: 700 }}>{rep.count}</div>
+          <div style={{ display: 'flex', gap: 'var(--space-sm)', marginTop: 'var(--space-md)', flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: 160, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-md)' }}>
+              <div className="t-body-sm" style={{ color: 'var(--muted)' }}>Transaksi</div>
+              <div className="t-headline-lg">{rep.count}</div>
             </div>
-            <div style={{ flex: 1, minWidth: 160, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 16 }}>
-              <div style={{ color: 'var(--muted)', fontSize: 13 }}>Pendapatan</div>
-              <div style={{ fontSize: 24, fontWeight: 700 }}>{formatRp(rep.revenue)}</div>
+            <div style={{ flex: 1, minWidth: 160, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-md)' }}>
+              <div className="t-body-sm" style={{ color: 'var(--muted)' }}>Pendapatan</div>
+              <div className="t-headline-lg t-mono" style={{ color: 'var(--primary)' }}>{formatRp(rep.revenue)}</div>
             </div>
           </div>
 
-          <h2 style={{ fontSize: 15, marginTop: 24 }}>Item Terlaris</h2>
+          <h2 className="t-headline-md" style={{ fontSize: 15, marginTop: 'var(--space-xl)' }}>Item Terlaris</h2>
           {rep.topItems.length === 0 ? (
             <p style={{ color: 'var(--muted)' }}>Tidak ada penjualan pada tanggal ini.</p>
           ) : (

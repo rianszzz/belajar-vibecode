@@ -1,0 +1,193 @@
+- generic [ref=f4e2]:
+  - banner [ref=f4e3]:
+    - generic [ref=f4e4]:
+      - generic [ref=f4e5]:
+        - generic [ref=f4e7]: Mini POS
+        - 'button "Status sinkronisasi: Tersinkron. Klik untuk sinkron manual." [ref=f4e8] [cursor=pointer]':
+          - generic [ref=f4e10]: Tersinkron
+      - navigation "Navigasi utama" [ref=f4e11]:
+        - button "Kasir" [ref=f4e12] [cursor=pointer]
+        - button "Riwayat" [ref=f4e13] [cursor=pointer]
+        - button "Konflik" [ref=f4e14] [cursor=pointer]
+        - button "Laporan" [ref=f4e15] [cursor=pointer]
+        - button "Keluar" [ref=f4e16] [cursor=pointer]
+  - main [ref=f4e17]:
+    - generic [ref=f4e18]:
+      - generic [ref=f4e19]:
+        - textbox "Cari produk" [ref=f4e20]:
+          - /placeholder: Cari nama / barcode…
+        - button "Pindai barcode kamera" [ref=f4e22] [cursor=pointer]: 📷 Scan
+        - generic [ref=f4e23]:
+          - button "Semua" [ref=f4e24] [cursor=pointer]
+          - button "Sembako" [ref=f4e25] [cursor=pointer]
+          - button "Makanan" [ref=f4e26] [cursor=pointer]
+          - button "Minuman" [ref=f4e27] [cursor=pointer]
+          - button "Kebutuhan Rumah" [ref=f4e28] [cursor=pointer]
+          - button "Rokok" [ref=f4e29] [cursor=pointer]
+          - button "Lainnya" [ref=f4e30] [cursor=pointer]
+        - generic [ref=f4e31]:
+          - 'button "Minuman Stok: 150 Air Mineral 600ml 8886000010094 Rp4.000" [ref=f4e32] [cursor=pointer]':
+            - generic [ref=f4e33]:
+              - generic [ref=f4e34]: Minuman
+              - generic [ref=f4e35]: "Stok: 150"
+            - generic [ref=f4e36]: Air Mineral 600ml
+            - generic [ref=f4e37]: "8886000010094"
+            - generic [ref=f4e38]: Rp4.000
+          - 'button "Sembako Stok: 39 Beras Premium 5kg 8886000010018 Rp72.000" [ref=f4e39] [cursor=pointer]':
+            - generic [ref=f4e40]:
+              - generic [ref=f4e41]: Sembako
+              - generic [ref=f4e42]: "Stok: 39"
+            - generic [ref=f4e43]: Beras Premium 5kg
+            - generic [ref=f4e44]: "8886000010018"
+            - generic [ref=f4e45]: Rp72.000
+          - 'button "Makanan Stok: 40 Biskuit Cokelat 8886000010124 Rp8.500" [ref=f4e46] [cursor=pointer]':
+            - generic [ref=f4e47]:
+              - generic [ref=f4e48]: Makanan
+              - generic [ref=f4e49]: "Stok: 40"
+            - generic [ref=f4e50]: Biskuit Cokelat
+            - generic [ref=f4e51]: "8886000010124"
+            - generic [ref=f4e52]: Rp8.500
+          - 'button "Kebutuhan Rumah Stok: 27 Deterjen Bubuk 800g 8886000010162 Rp18.000" [ref=f4e53] [cursor=pointer]':
+            - generic [ref=f4e54]:
+              - generic [ref=f4e55]: Kebutuhan Rumah
+              - generic [ref=f4e56]: "Stok: 27"
+            - generic [ref=f4e57]: Deterjen Bubuk 800g
+            - generic [ref=f4e58]: "8886000010162"
+            - generic [ref=f4e59]: Rp18.000
+          - 'button "Sembako Stok: 58 Gula Pasir 1kg 8886000010032 Rp15.000" [ref=f4e60] [cursor=pointer]':
+            - generic [ref=f4e61]:
+              - generic [ref=f4e62]: Sembako
+              - generic [ref=f4e63]: "Stok: 58"
+            - generic [ref=f4e64]: Gula Pasir 1kg
+            - generic [ref=f4e65]: "8886000010032"
+            - generic [ref=f4e66]: Rp15.000
+          - 'button "Sembako Stok: 27 Kecap Manis 520ml 8886000010179 Rp14.000" [ref=f4e67] [cursor=pointer]':
+            - generic [ref=f4e68]:
+              - generic [ref=f4e69]: Sembako
+              - generic [ref=f4e70]: "Stok: 27"
+            - generic [ref=f4e71]: Kecap Manis 520ml
+            - generic [ref=f4e72]: "8886000010179"
+            - generic [ref=f4e73]: Rp14.000
+          - 'button "Minuman Stok: 196 Kopi Sachet 8886000010070 Rp2.000" [ref=f4e74] [cursor=pointer]':
+            - generic [ref=f4e75]:
+              - generic [ref=f4e76]: Minuman
+              - generic [ref=f4e77]: "Stok: 196"
+            - generic [ref=f4e78]: Kopi Sachet
+            - generic [ref=f4e79]: "8886000010070"
+            - generic [ref=f4e80]: Rp2.000
+          - 'button "Lainnya Stok: 95 Korek Api 8886000010209 Rp1.000" [ref=f4e81] [cursor=pointer]':
+            - generic [ref=f4e82]:
+              - generic [ref=f4e83]: Lainnya
+              - generic [ref=f4e84]: "Stok: 95"
+            - generic [ref=f4e85]: Korek Api
+            - generic [ref=f4e86]: "8886000010209"
+            - generic [ref=f4e87]: Rp1.000
+          - 'button "Makanan Stok: 119 Mie Instan Goreng 8886000010063 Rp3.500" [ref=f4e88] [cursor=pointer]':
+            - generic [ref=f4e89]:
+              - generic [ref=f4e90]: Makanan
+              - generic [ref=f4e91]: "Stok: 119"
+            - generic [ref=f4e92]: Mie Instan Goreng
+            - generic [ref=f4e93]: "8886000010063"
+            - generic [ref=f4e94]: Rp3.500
+          - 'button "Sembako Stok: 48 Minyak Goreng 2L 8886000010025 Rp36.000" [ref=f4e95] [cursor=pointer]':
+            - generic [ref=f4e96]:
+              - generic [ref=f4e97]: Sembako
+              - generic [ref=f4e98]: "Stok: 48"
+            - generic [ref=f4e99]: Minyak Goreng 2L
+            - generic [ref=f4e100]: "8886000010025"
+            - generic [ref=f4e101]: Rp36.000
+          - 'button "Kebutuhan Rumah Stok: 35 Pasta Gigi 8886000010155 Rp12.000" [ref=f4e102] [cursor=pointer]':
+            - generic [ref=f4e103]:
+              - generic [ref=f4e104]: Kebutuhan Rumah
+              - generic [ref=f4e105]: "Stok: 35"
+            - generic [ref=f4e106]: Pasta Gigi
+            - generic [ref=f4e107]: "8886000010155"
+            - generic [ref=f4e108]: Rp12.000
+          - 'button "— Stok: 0 Produk Tanpa Barcode 2150235150259 Rp5.000" [disabled] [ref=f4e109]':
+            - generic [ref=f4e110]:
+              - generic [ref=f4e111]: —
+              - generic [ref=f4e112]: "Stok: 0"
+            - generic [ref=f4e113]: Produk Tanpa Barcode
+            - generic [ref=f4e114]: "2150235150259"
+            - generic [ref=f4e115]: Rp5.000
+          - 'button "Rokok Stok: 50 Rokok Filter 12 8886000010193 Rp26.000" [ref=f4e116] [cursor=pointer]':
+            - generic [ref=f4e117]:
+              - generic [ref=f4e118]: Rokok
+              - generic [ref=f4e119]: "Stok: 50"
+            - generic [ref=f4e120]: Rokok Filter 12
+            - generic [ref=f4e121]: "8886000010193"
+            - generic [ref=f4e122]: Rp26.000
+          - 'button "Makanan Stok: 18 Roti Tawar 8886000010117 Rp17.000" [ref=f4e123] [cursor=pointer]':
+            - generic [ref=f4e124]:
+              - generic [ref=f4e125]: Makanan
+              - generic [ref=f4e126]: "Stok: 18"
+            - generic [ref=f4e127]: Roti Tawar
+            - generic [ref=f4e128]: "8886000010117"
+            - generic [ref=f4e129]: Rp17.000
+          - 'button "Kebutuhan Rumah Stok: 80 Sabun Mandi Batang 8886000010131 Rp4.500" [ref=f4e130] [cursor=pointer]':
+            - generic [ref=f4e131]:
+              - generic [ref=f4e132]: Kebutuhan Rumah
+              - generic [ref=f4e133]: "Stok: 80"
+            - generic [ref=f4e134]: Sabun Mandi Batang
+            - generic [ref=f4e135]: "8886000010131"
+            - generic [ref=f4e136]: Rp4.500
+          - 'button "Sembako Stok: 32 Saus Sambal 340ml 8886000010186 Rp11.000" [ref=f4e137] [cursor=pointer]':
+            - generic [ref=f4e138]:
+              - generic [ref=f4e139]: Sembako
+              - generic [ref=f4e140]: "Stok: 32"
+            - generic [ref=f4e141]: Saus Sambal 340ml
+            - generic [ref=f4e142]: "8886000010186"
+            - generic [ref=f4e143]: Rp11.000
+          - 'button "Kebutuhan Rumah Stok: 249 Shampoo Sachet 8886000010148 Rp1.500" [ref=f4e144] [cursor=pointer]':
+            - generic [ref=f4e145]:
+              - generic [ref=f4e146]: Kebutuhan Rumah
+              - generic [ref=f4e147]: "Stok: 249"
+            - generic [ref=f4e148]: Shampoo Sachet
+            - generic [ref=f4e149]: "8886000010148"
+            - generic [ref=f4e150]: Rp1.500
+          - 'button "Minuman Stok: 25 Susu UHT 1L 8886000010100 Rp19.000" [ref=f4e151] [cursor=pointer]':
+            - generic [ref=f4e152]:
+              - generic [ref=f4e153]: Minuman
+              - generic [ref=f4e154]: "Stok: 25"
+            - generic [ref=f4e155]: Susu UHT 1L
+            - generic [ref=f4e156]: "8886000010100"
+            - generic [ref=f4e157]: Rp19.000
+          - 'button "Minuman Stok: 30 Teh Celup Box 8886000010087 Rp9.000" [ref=f4e158] [cursor=pointer]':
+            - generic [ref=f4e159]:
+              - generic [ref=f4e160]: Minuman
+              - generic [ref=f4e161]: "Stok: 30"
+            - generic [ref=f4e162]: Teh Celup Box
+            - generic [ref=f4e163]: "8886000010087"
+            - generic [ref=f4e164]: Rp9.000
+          - 'button "Sembako Stok: 35 Telur Ayam 1kg 8886000010056 Rp28.000" [ref=f4e165] [cursor=pointer]':
+            - generic [ref=f4e166]:
+              - generic [ref=f4e167]: Sembako
+              - generic [ref=f4e168]: "Stok: 35"
+            - generic [ref=f4e169]: Telur Ayam 1kg
+            - generic [ref=f4e170]: "8886000010056"
+            - generic [ref=f4e171]: Rp28.000
+          - 'button "Sembako Stok: 45 Tepung Terigu 1kg 8886000010049 Rp12.000" [ref=f4e172] [cursor=pointer]':
+            - generic [ref=f4e173]:
+              - generic [ref=f4e174]: Sembako
+              - generic [ref=f4e175]: "Stok: 45"
+            - generic [ref=f4e176]: Tepung Terigu 1kg
+            - generic [ref=f4e177]: "8886000010049"
+            - generic [ref=f4e178]: Rp12.000
+      - generic [ref=f4e179]:
+        - heading "Keranjang" [level=2] [ref=f4e180]
+        - paragraph [ref=f4e181]: Belum ada item.
+        - generic [ref=f4e182]: Diskon (Rp)
+        - spinbutton "Diskon (Rp)" [ref=f4e183]
+        - separator [ref=f4e184]
+        - generic [ref=f4e185]:
+          - generic [ref=f4e186]: Subtotal
+          - generic [ref=f4e187]: Rp0
+        - generic [ref=f4e188]:
+          - generic [ref=f4e189]: Total
+          - generic [ref=f4e190]: Rp0
+        - generic [ref=f4e191]: Uang Diterima (Rp)
+        - spinbutton "Uang Diterima (Rp)" [ref=f4e192]
+        - generic [ref=f4e193]:
+          - generic [ref=f4e194]: "Kembali:"
+          - generic [ref=f4e195]: Rp0
+        - button "BAYAR SEKARANG" [disabled] [ref=f4e196]

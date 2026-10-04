@@ -2,23 +2,35 @@ import React, { useEffect, useRef } from 'react'
 import { formatRp } from '../lib/money.js'
 
 function lines(txn) {
-  return [
-    `Mini POS`,
-    txn.receipt_no,
-    new Date(txn.created_at).toLocaleString('id-ID'),
-    `--------------------------------`,
-    ...(Array.isArray(txn.items) ? txn.items : []).map(
-      (i) => `${i.name}\n  ${i.qty} x ${formatRp(i.price).padEnd(14)} ${formatRp(i.qty * i.price)}`
-    ),
-    `--------------------------------`,
-    `Subtotal          ${formatRp(txn.subtotal)}`,
-    `Diskon            ${formatRp(txn.discount)}`,
-    `TOTAL             ${formatRp(txn.total)}`,
-    `Bayar             ${formatRp(txn.paid)}`,
-    `Kembali           ${formatRp(txn.change)}`,
-    `--------------------------------`,
-    `Terima kasih!`,
-  ].join('\n')
+  return (
+    <>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ fontWeight: 700, fontSize: 16 }}>MINI POS</div>
+        <div style={{ color: 'var(--muted)', fontSize: 12 }}>Struk Digital — Bukan Faktur Pajak</div>
+      </div>
+      <hr className="receipt-divider" />
+      <div className="row"><span className="k">No. Struk</span><b>{txn.receipt_no}</b></div>
+      <div className="row"><span className="k">Tanggal</span><span>{new Date(txn.created_at).toLocaleString('id-ID')}</span></div>
+      <hr className="receipt-divider" />
+      {txn.items.map((i) => (
+        <div key={i.uuid} style={{ marginBottom: 4 }}>
+          <div>{i.name}</div>
+          <div className="row">
+            <span className="k">{i.qty} x {formatRp(i.price)}</span>
+            <span>{formatRp(i.qty * i.price)}</span>
+          </div>
+        </div>
+      ))}
+      <hr className="receipt-divider" />
+      <div className="row"><span className="k">Subtotal</span><span>{formatRp(txn.subtotal)}</span></div>
+      <div className="row"><span className="k">Diskon</span><span>{formatRp(txn.discount)}</span></div>
+      <div className="row" style={{ fontWeight: 700, fontSize: 15 }}><span>TOTAL</span><span>{formatRp(txn.total)}</span></div>
+      <div className="row"><span className="k">Bayar</span><span>{formatRp(txn.paid)}</span></div>
+      <div className="row"><span className="k">Kembali</span><span>{formatRp(txn.change)}</span></div>
+      <hr className="receipt-divider" />
+      <div style={{ textAlign: 'center', color: 'var(--muted)', fontSize: 12 }}>Terima kasih!</div>
+    </>
+  )
 }
 
 export default function ReceiptModal({ txn, onClose }) {
@@ -36,21 +48,20 @@ export default function ReceiptModal({ txn, onClose }) {
   return (
     <div
       role="dialog" aria-modal="true" aria-label="Struk pembayaran"
+      className="modal-overlay"
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
-      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
     >
-      <div
-        ref={ref} tabIndex={-1}
-        style={{ background: 'var(--surface)', borderRadius: 'var(--radius)', padding: 16, maxWidth: 400, width: '100%', outline: 'none' }}
-      >
-        <pre className="receipt" style={{ fontFamily: 'ui-monospace, monospace', fontSize: 12, margin: 0, whiteSpace: 'pre-wrap' }}>
+      <div ref={ref} tabIndex={-1} className="modal-card" style={{ outline: 'none' }}>
+        <div className="receipt">
           {lines(txn)}
-        </pre>
-        <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-          <button onClick={() => window.print()} style={{ flex: 1, padding: 10, background: 'var(--primary)', color: 'var(--primary-ink)', border: 'none', borderRadius: 'var(--radius)' }}>
+        </div>
+        <div style={{ display: 'flex', gap: 8, marginTop: 'var(--space-md)' }}>
+          <button onClick={() => window.print()} className="btn-primary" style={{ flex: 1, minHeight: 44 }}>
             Cetak
           </button>
-          <button onClick={onClose} style={{ flex: 1, padding: 10 }}>Tutup</button>
+          <button onClick={onClose} style={{ flex: 1, minHeight: 44, border: 'none', borderRadius: 'var(--radius-xl)', background: 'var(--surface-high)' }}>
+            Tutup
+          </button>
         </div>
       </div>
     </div>

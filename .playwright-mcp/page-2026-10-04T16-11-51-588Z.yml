@@ -1,0 +1,32 @@
+- generic [ref=f4e2]:
+  - banner [ref=f4e3]:
+    - generic [ref=f4e4]:
+      - generic [ref=f4e5]:
+        - generic [ref=f4e7]: Mini POS
+        - 'button "Status sinkronisasi: Tersinkron. Klik untuk sinkron manual." [ref=f4e8] [cursor=pointer]':
+          - generic [ref=f4e10]: Tersinkron
+      - navigation "Navigasi utama" [ref=f4e11]:
+        - button "Kasir" [ref=f4e12] [cursor=pointer]
+        - button "Riwayat" [active] [ref=f4e13] [cursor=pointer]
+        - button "Konflik" [ref=f4e14] [cursor=pointer]
+        - button "Laporan" [ref=f4e15] [cursor=pointer]
+        - button "Keluar" [ref=f4e16] [cursor=pointer]
+  - main [ref=f4e197]:
+    - heading "Riwayat Transaksi" [level=1] [ref=f4e198]
+    - list [ref=f4e199]:
+      - listitem [ref=f4e200]:
+        - button "DEV28baf399-000002 4/10/2026, 08.05.24 · 1 item Rp1.000 synced" [ref=f4e201] [cursor=pointer]:
+          - generic [ref=f4e202]:
+            - generic [ref=f4e203]: DEV28baf399-000002
+            - generic [ref=f4e204]: 4/10/2026, 08.05.24 · 1 item
+          - generic [ref=f4e205]:
+            - generic [ref=f4e206]: Rp1.000
+            - generic [ref=f4e207]: synced
+      - listitem [ref=f4e208]:
+        - button "DEV28baf399-000001 4/10/2026, 08.00.01 · 2 item Rp66.000 synced" [ref=f4e209] [cursor=pointer]:
+          - generic [ref=f4e210]:
+            - generic [ref=f4e211]: DEV28baf399-000001
+            - generic [ref=f4e212]: 4/10/2026, 08.00.01 · 2 item
+          - generic [ref=f4e213]:
+            - generic [ref=f4e214]: Rp66.000
+            - generic [ref=f4e215]: synced

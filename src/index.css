@@ -1,16 +1,38 @@
+/* Design tokens — hasil adaptasi Stitch project 18194228294840684774
+   ("Kasir Bersih Nusantara": Inter + JetBrains Mono, utilitarian minimalism).
+   Palet inti (bg/surface/text/muted/primary/dll) tetap identik dengan DESIGN.md.
+   Font dimuat via <link> preconnect di index.html (bukan @import — menghindari
+   render-blocking CSS eksternal). */
+
 :root {
   --bg: #f5f5f4;
   --surface: #ffffff;
+  --surface-low: #fcf2eb;      /* container-low Stitch */
+  --surface-container: #f6ece6;
+  --surface-high: #f0e6e0;     /* container-high Stitch */
   --border: #e7e5e4;
+  --outline-variant: #bdc9c6;
   --text: #1c1917;
+  --on-surface-variant: #3e4947;
   --muted: #78716c;
   --primary: #0f766e;
+  --primary-container: #0f766e; /* tombol utama Stitch: primary-container + on-primary */
   --primary-ink: #ffffff;
+  --primary-fixed: #9cf2e8;     /* aksen chip/label Stitch */
   --danger: #b91c1c;
   --warning: #b45309;
   --ok: #15803d;
+  --secondary-fixed: #95f8a7;   /* latar kembalian Stitch */
   --radius: 8px;
-  --font: system-ui, sans-serif;
+  --radius-xl: 12px;
+  --font: 'Inter', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* spacing Stitch */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.5rem;
 }
 
 * { box-sizing: border-box; }
@@ -18,11 +40,141 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 15px/1.5 var(--font);
+  font: 15px/22px var(--font);
+  -webkit-font-smoothing: antialiased;
 }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
 a { color: var(--primary); }
+
+/* Typography scale Stitch */
+.t-headline-lg { font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: -0.02em; }
+.t-headline-md { font-size: 18px; line-height: 24px; font-weight: 600; letter-spacing: -0.01em; }
+.t-body-md     { font-size: 15px; line-height: 22px; }
+.t-body-sm     { font-size: 13px; line-height: 18px; }
+.t-label-md    { font-size: 15px; line-height: 20px; font-weight: 600; }
+.t-label-sm    { font-size: 13px; line-height: 16px; font-weight: 500; letter-spacing: 0.02em; }
+.t-mono        { font-family: var(--mono); font-size: 13px; line-height: 18px; letter-spacing: -0.02em; }
+
+/* Header shell Stitch: sticky + blur + hair shadow */
+.app-header {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+  border-bottom: 1px solid var(--border);
+}
+.app-header-inner {
+  height: 64px; padding: 0 var(--space-xl);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-lg);
+}
+.brand { display: flex; align-items: center; gap: var(--space-md); }
+.brand img { height: 32px; width: auto; }
+.brand-name { font-size: 15px; line-height: 20px; font-weight: 600; }
+
+/* Nav pill Stitch: item aktif = primary-container */
+.app-nav { display: flex; gap: var(--space-xs); }
+.app-nav button {
+  padding: var(--space-sm) var(--space-md); border: none; border-radius: var(--radius);
+  background: transparent; color: var(--on-surface-variant); font-weight: 500;
+  transition: background-color 100ms;
+}
+.app-nav button:hover { background: var(--surface-high); color: var(--text); }
+.app-nav button.active {
+  background: var(--primary-container); color: var(--primary-ink); font-weight: 600;
+}
+
+/* Kartu produk Stitch */
+.product-card {
+  background: var(--surface); border-radius: var(--radius-xl); padding: var(--space-md);
+  display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-md);
+  border: 1px solid var(--border); text-align: left; transition: border-color 100ms;
+  min-height: 132px;
+}
+.product-card:hover:not(:disabled) { border-color: var(--primary); }
+.product-card:disabled { opacity: 0.5; background: var(--bg); cursor: not-allowed; }
+.product-chip {
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  padding: 2px var(--space-xs); border-radius: 4px;
+  background: var(--surface-container); color: var(--muted);
+}
+.stock-chip {
+  font-family: var(--mono); font-size: 11px;
+  padding: 2px var(--space-xs); border-radius: 4px;
+  color: var(--ok); background: color-mix(in srgb, var(--ok) 10%, transparent);
+}
+.product-price { font-size: 18px; line-height: 24px; font-weight: 700; color: var(--primary); }
+.product-barcode { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+/* Stepper qty Stitch: 44x44, teks 18px bold */
+.qty-btn {
+  width: 44px; height: 44px; border-radius: var(--radius); border: none;
+  background: var(--surface-high); color: var(--text);
+  font-size: 18px; font-weight: 700;
+}
+.qty-btn:hover { background: var(--primary); color: var(--primary-ink); }
+
+/* BAYAR Stitch: min-height 52px, primary-container, active scale */
+.btn-primary {
+  width: 100%; min-height: 52px; border: none; border-radius: var(--radius-xl);
+  background: var(--primary-container); color: var(--primary-ink);
+  font-size: 18px; font-weight: 600; letter-spacing: 0.01em;
+  transition: opacity 100ms, transform 100ms;
+}
+.btn-primary:hover:not(:disabled) { opacity: 0.95; }
+.btn-primary:active:not(:disabled) { transform: scale(0.99); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Kembalian box Stitch: secondary-fixed/40 */
+.change-box {
+  height: 48px; padding: 0 var(--space-md); border-radius: var(--radius);
+  background: color-mix(in srgb, var(--secondary-fixed) 40%, transparent);
+  color: var(--ok); display: flex; align-items: center; justify-content: space-between;
+}
+.input-mono {
+  width: 100%; height: 48px; padding: 0 var(--space-md);
+  border: none; border-radius: var(--radius); background: var(--surface-container);
+  font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--text);
+}
+.input-mono:focus { outline: 2px solid var(--primary); }
+
+/* SyncBadge Stitch: dot 8px + label, tinggi 36px */
+.sync-badge {
+  display: flex; align-items: center; gap: var(--space-xs);
+  height: 36px; padding: 0 var(--space-md); border-radius: var(--radius);
+  border: none; background: var(--surface-container); color: var(--text); font-weight: 500;
+}
+.sync-badge .dot { width: 8px; height: 8px; border-radius: 9999px; }
+
+/* Kategori pill Stitch */
+.cat-pill {
+  height: 36px; padding: 0 var(--space-md); border-radius: 9999px; border: none;
+  background: var(--surface); color: var(--text); font-weight: 500; flex-shrink: 0;
+}
+.cat-pill.active { background: var(--primary-container); color: var(--primary-ink); font-weight: 600; }
+
+/* Modal overlay Stitch level-3 */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(28, 25, 23, 0.6); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: var(--space-md);
+}
+.modal-card {
+  background: var(--surface); border-radius: var(--radius-xl); padding: var(--space-lg);
+  max-width: 480px; width: 100%;
+}
+
+/* Struk thermal Stitch: kartu mono 38ch, border-top 6px primary, dashed divider */
+.receipt {
+  font-family: var(--mono); font-size: 13px; line-height: 18px; letter-spacing: -0.02em;
+  background: var(--surface-container-lowest);
+  border-top: 6px solid var(--primary-container); border-radius: 4px 4px 0 0;
+  padding: var(--space-lg); width: 100%; max-width: 38ch; margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12); user-select: text;
+}
+.receipt-divider { border: none; border-top: 1px dashed var(--outline-variant); margin: var(--space-sm) 0; }
+.receipt .row { display: flex; justify-content: space-between; }
+.receipt .row .k { color: var(--muted); }
 
 @media print {
   body * { display: none !important; }

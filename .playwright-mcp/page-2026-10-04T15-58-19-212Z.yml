@@ -1,0 +1,9 @@
+- main [ref=e3]:
+  - heading "Mini POS" [level=1] [ref=e4]
+  - generic [ref=e5]:
+    - generic [ref=e6]: Username
+    - textbox "Username" [ref=e7]: admin
+    - generic [ref=e8]: Password
+    - textbox "Password" [ref=e9]: admin12345
+    - alert [ref=e11]: Username atau password salah
+    - button "Masuk" [ref=e10] [cursor=pointer]

@@ -1,0 +1,40 @@
+- generic [ref=f4e2]:
+  - banner [ref=f4e3]:
+    - generic [ref=f4e4]:
+      - generic [ref=f4e5]:
+        - generic [ref=f4e7]: Mini POS
+        - 'button "Status sinkronisasi: Tersinkron. Klik untuk sinkron manual." [ref=f4e8] [cursor=pointer]':
+          - generic [ref=f4e10]: Tersinkron
+      - navigation "Navigasi utama" [ref=f4e11]:
+        - button "Kasir" [ref=f4e12] [cursor=pointer]
+        - button "Riwayat" [ref=f4e13] [cursor=pointer]
+        - button "Konflik" [ref=f4e14] [cursor=pointer]
+        - button "Laporan" [active] [ref=f4e15] [cursor=pointer]
+        - button "Keluar" [ref=f4e16] [cursor=pointer]
+  - main [ref=f4e256]:
+    - heading "Laporan Harian" [level=1] [ref=f4e257]
+    - generic [ref=f4e258]: Tanggal
+    - textbox "Tanggal" [ref=f4e259]: 2026-10-04
+    - generic [ref=f4e260]:
+      - generic [ref=f4e261]:
+        - generic [ref=f4e262]: Transaksi
+        - generic [ref=f4e263]: "2"
+      - generic [ref=f4e264]:
+        - generic [ref=f4e265]: Pendapatan
+        - generic [ref=f4e266]: Rp67.000
+    - heading "Item Terlaris" [level=2] [ref=f4e267]
+    - table [ref=f4e268]:
+      - rowgroup [ref=f4e269]:
+        - row [ref=f4e270]:
+          - columnheader "Item" [ref=f4e271]
+          - columnheader "Qty terjual" [ref=f4e272]
+      - rowgroup [ref=f4e273]:
+        - row [ref=f4e274]:
+          - cell "Gula Pasir 1kg" [ref=f4e275]
+          - cell "2" [ref=f4e276]
+        - row [ref=f4e277]:
+          - cell "Minyak Goreng 2L" [ref=f4e278]
+          - cell "1" [ref=f4e279]
+        - row [ref=f4e280]:
+          - cell "Korek Api" [ref=f4e281]
+          - cell "1" [ref=f4e282]

@@ -4,26 +4,17 @@ import { useSync } from '../state/sync-context.jsx'
 export default function SyncBadge() {
   const { online, pending, busy, sync } = useSync()
 
-  const label = !online
-    ? `Offline (${pending} pending)`
-    : busy
-      ? 'Sinkron…'
-      : pending > 0
-        ? `Sinkronkan (${pending})`
-        : 'Tersinkron'
-
   const color = !online ? 'var(--warning)' : pending > 0 ? 'var(--danger)' : 'var(--ok)'
+  const label = !online ? `Offline (${pending})` : busy ? 'Sinkron…' : pending > 0 ? `Sinkronkan (${pending})` : 'Tersinkron'
 
   return (
     <button
       onClick={() => sync()}
       aria-label={`Status sinkronisasi: ${label}. Klik untuk sinkron manual.`}
-      style={{
-        padding: '6px 12px', borderRadius: 999, border: `1px solid ${color}`,
-        background: 'var(--surface)', color, fontSize: 13, cursor: 'pointer',
-      }}
+      className="sync-badge"
     >
-      {busy ? '⏳' : online ? '🟢' : '🔴'} {label}
+      <span className="dot" style={{ background: color }} aria-hidden="true" />
+      <span className="t-label-sm">{label}</span>
     </button>
   )
 }
