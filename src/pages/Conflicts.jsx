@@ -9,7 +9,8 @@ export default function Conflicts() {
   const [txns, setTxns] = useState([])
 
   const reload = () => conflictedTxns().then(setTxns)
-  useEffect(reload, [])
+  // useEffect callback HARUS return undefined/function — return Promise → crash saat unmount
+  useEffect(() => { reload() }, [])
 
   async function accept(txn) {
     await resolveConflict(txn.uuid)

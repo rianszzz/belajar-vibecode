@@ -84,7 +84,11 @@ Build: `vite build` bersih · Unit test: `node --test` → 7 pass / 0 fail
 | `/reports/daily` live vs laporan lokal | ✔ untuk transaksi device ini (device lain belum di-pull — transaksi push-only, sesuai arsitektur) |
 
 ### Root cause laporan "Konflik blank" dari pengguna
-Bundle lama ter-cache service worker: deploy GAP memakai build lama (hash beda: live `D1nf09vx` vs build benar `CquZytNi` yang memuat Riwayat/fix). Setelah rebuild + redeploy (`b27d60a2`) + reload, semua halaman utuh tanpa blank, 0 console error. Kini `registerType: 'prompt'` + banner membuat perubahan versi berikutnya selalu terlihat user.
+1. **Deploy memakai build lama** — live hash `D1nf09vx` vs build benar `CquZytNi`. Fix: rebuild + redeploy.
+2. **Crash React saat meninggalkan halaman Konflik** (`n is not a function`): `useEffect(reload, [])` dengan `reload = () => conflictedTxns().then(...)` — callback useEffect yang **return Promise** (bukan undefined/function) membuat React crash saat unmount → blank + nav hilang. Fix: bungkus `useEffect(() => { reload() }, [])` (Conflicts.jsx; POS.jsx dikonsistenkan). Pola ini di-audit ke seluruh src — hanya dua lokasi itu.
+3. **"Konflik tak bisa diklik" di localhost** = efek samping crash loop (setelah blank, tidak ada nav untuk diklik). Setelah fix, localhost & live lolos matriks navigasi 7 langkah bolak-balik (Konflik↔Kasir↔Laporan↔Riwayat) tanpa crash, 0 console error.
+
+Deploy final: `43593a4c`.
 
 ## 7. Auth & Peran — ✔ terekssekusi live
 

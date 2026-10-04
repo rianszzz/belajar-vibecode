@@ -26,7 +26,8 @@ export default function POS() {
     categories().then(setCats)
   }
   // reload saat query/cat berubah ATAU setelah pull sync membawa katalog baru
-  useEffect(reload, [query, cat, dataVersion])
+  // (callback useEffect harus return undefined — bukan Promise)
+  useEffect(() => { reload() }, [query, cat, dataVersion])
 
   const { subtotal, total } = useMemo(() => {
     try {
