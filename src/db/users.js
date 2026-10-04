@@ -1,4 +1,4 @@
-import { db, meta } from './db.js'
+import { db } from './db.js'
 
 export async function saveSession(user, token) {
   await db.users.put({ username: user.username, role: user.role, token, saved_at: new Date().toISOString() })
@@ -21,8 +21,4 @@ export function isTokenExpired(token) {
 
 export async function logout() {
   await db.users.clear()
-}
-
-export async function deviceInfo() {
-  return { device_id: await meta.get('device_id') }
 }

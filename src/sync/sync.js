@@ -16,7 +16,6 @@ export async function syncNow() {
   try {
     const pushRes = await pushPending()
     const pullRes = await pullProducts()
-    await meta.set('last_sync', new Date().toISOString())
     return { pushed: pushRes, pulled: pullRes }
   } finally {
     syncing = false

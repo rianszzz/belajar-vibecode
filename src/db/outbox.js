@@ -1,15 +1,9 @@
-import Dexie from 'dexie'
 import { db } from './db.js'
-
-// Satu-satunya penulis outbox (aturan AGENTS.md #4).
-
-export function enqueue(txn) {
-  return db.outbox.add({ txn_uuid: txn.uuid, payload: txn, attempts: 0, retry_at: 0 })
-}
-
 import { backoffFor } from '../sync/backoff.js'
 
-// Backoff eksponensial + jitter (logika di sync/backoff.js agar testable)
+// Satu-satunya penulis outbox (aturan AGENTS.md #4). Checkout menulis via
+// db.outbox.add langsung di dalam transaction Dexie-nya (lihat txns.js).
+
 function backoffMs(attempts) {
   return backoffFor(attempts)
 }

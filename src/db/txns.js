@@ -79,9 +79,3 @@ export async function checkout({ items, subtotal, discount, total, paid }) {
 export async function pendingCount() {
   return db.outbox.count()
 }
-
-export async function transactionsByDate(dateStr) {
-  // dateStr: 'YYYY-MM-DD' (lokal)
-  const all = await db.transactions.where('created_at').startsWith(dateStr).toArray()
-  return all.sort((a, b) => b.created_at.localeCompare(a.created_at))
-}
